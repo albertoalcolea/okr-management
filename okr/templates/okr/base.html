@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+    <title>{% block title %}{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/static/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
+    <link href="/static/css/style.css" type="text/css" rel="stylesheet" />
+</head>
+<body>
+	<div class="container-narrow">
+		<header class="masthead">
+			<nav class="nav nav-pills pull-right">
+				{% block nav %}
+					<li class="active">
+						<a href="{% url 'okr:index' %}">Your OKRs</a>
+					</li>
+					<li>
+						<a href="{% url 'okr:archived' %}">Archived</a>
+					</li>
+					<li>
+						<a href="#">About</a>	
+					</li>
+				{% endblock %}
+			</nav>
+			<h1 class="text-muted">OKR Magement System</h1>
+			{# <h1 class="muted"><a href='{% url 'okr:index' %}'>OKR Management System</a></h1> #}
+		</header>
+		<hr />
+		<section class="content">
+    		{% block content %}{% endblock %}
+    	</section>
+    	<hr />
+    	<footer class="footer">
+	    	<p>Created by <a href="http://twitter.com/albertoalcolea">@albertoalcolea</a></p>
+	    </footer>
+	</div>
+    <script src="/static/js/jquery-1.11.0.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+</body>
+</html>

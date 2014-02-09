@@ -1,0 +1,21 @@
+{% extends "okr/list.html" %}
+
+{% block title %}OKR Management System{% endblock %}
+
+{% block nav %}
+	<li class="active">
+		<a href="{% url 'okr:index' %}">Your OKRs</a>
+	</li>
+	<li>
+		<a href="{% url 'okr:archived' %}">Archived</a>
+	</li>
+	<li>
+		<a href="#">About</a>	
+	</li>
+{% endblock %}
+
+{% block edit %}
+<button type="button" class="btn btn-primary btn-xs">
+	<span class="glyphicon glyphicon-pencil"></span>
+</button>
+{% endblock %}

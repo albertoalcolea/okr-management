@@ -1,0 +1,36 @@
+{% extends "okr/base.html" %}
+
+{% block content %}
+	{% if okr_list %}
+		{% for okr in okr_list %}
+			<article class="okr jumbotron">
+				<h2><a href="#">{{ okr.objective.name }}</a></h2>
+				<div class="progress progress-striped">
+					<div class="progress-bar progress-bar-danger" style="width: {{ okr.percentage }}%;">
+						<span>{{ okr.percentage }}%</span>
+					</div>
+				</div>
+				<ul>
+					{% for keyresult in okr.keyresults %}
+						<li>
+							<h4>{{ keyresult.name }}</h4>
+							<div class="progress-container">
+								<div class="progress progress-striped">
+	    							<div class="progress-bar" style="width: {{ keyresult.percentage }}%;">
+	        							<span>{{ keyresult.percentage }}%</span>
+	    							</div>
+								</div>
+								{% block edit %}
+								{% endblock %}
+							</div>
+							<span class="small details">{{ keyresult.details }}</span>
+						</li>
+					{% endfor %}
+				</ul>
+				<span class="end-date pull-right">End date: {{ okr.objective.end_date }}</span>
+			</article>
+		{% endfor %}
+	{% else %}
+		<p>No objectives are available.</p>
+	{% endif %}
+{% endblock %}

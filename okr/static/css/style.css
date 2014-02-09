@@ -1,0 +1,90 @@
+body {
+	padding-top: 20px;
+	padding-bottom: 40px;
+}
+
+/* Custom container */
+.container-narrow {
+	margin: 0 auto;
+	max-width: 700px;
+}
+
+.container-narrow > hr {
+	margin: 30px 0;
+}
+
+.masthead h1 {
+	font-size: 24.5px;
+	font-weight: bold;
+	line-height: 40px;
+}
+
+/* Progress bars with centered text */
+.progress {
+    position: relative;
+}
+
+.progress span {
+    position: absolute;
+    display: block;
+    width: 100%;
+    color: black;
+ }
+
+.jumbotron {
+	padding-top: 20px;
+}
+
+ .okr h2 {
+	margin-bottom: 20px;
+	font-size: 24px;
+	font-weight: 700;
+	line-height: 1.1;
+ }
+
+ .okr > .progress {
+ 	margin-bottom: 40px;
+ 	margin-left: 40px;
+ 	width: 84.5%;
+ }
+
+ .okr li {
+ 	display: block;
+ 	margin-bottom: 30px;
+ }
+
+ .okr li h4 {
+ 	font-size: 16px;
+ 	margin-bottom: 15px;
+ 	padding-right: 40px;
+ }
+
+.okr .progress-bar span {
+	color: #555;
+	text-shadow: 1px 1px 5px #fff;
+}
+
+.okr .progress-container {
+	margin: 0;
+	padding: 0;
+}
+
+.okr .progress-container .progress {
+	display: inline-block;
+	width: 90%;
+	margin: 0 5px 0 0;
+}
+
+.okr input {
+	display: inline-block;
+}
+
+.okr .details {
+	margin-left: 20px;
+	color: #888;
+	font-style: italic;
+}
+
+ .okr .end-date {
+ 	font-size: small;
+ }
