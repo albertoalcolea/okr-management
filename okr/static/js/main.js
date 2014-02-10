@@ -64,22 +64,16 @@ $(document).ready(function() {
             'obtained'  : $('#edit-' + id).find('#id_obtained').val()
         };
 
-        console.log(request);
-
 		$.ajax({
             type: 'POST',
 			url: '/okr/ajax_test/',
 			data: request,
             dataType: 'json',
 			success: function (res) {
-				console.log('OK');
-				console.log(res);
                 updateKR(id, res);
 			},
 			error: function (xhr, errmsg, err) {
-				console.log('ERR');
-				//console.log(xhr.status + ": " + xhr.responseText);
-				console.log(xhr.status)
+                alert('Oops! something went wrong.')
 			}
 		});
 		return false;

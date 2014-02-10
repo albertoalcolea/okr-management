@@ -79,7 +79,7 @@ def ajax_test(request):
 			kr.save()
 
 			response = {
-				'status': 'ok',
+				'name': kr.name,
 				'percentage': kr.percentage(),
 				'details': get_details(kr.type_data, kr.obtained, kr.expected),
 			}   
