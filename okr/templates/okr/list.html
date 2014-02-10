@@ -13,17 +13,21 @@
 				<ul>
 					{% for keyresult in okr.keyresults %}
 						<li>
-							<h4>{{ keyresult.name }}</h4>
+							<h4 id="krname-{{ keyresult.id }}">{{ keyresult.name }}</h4>
 							<div class="progress-container">
 								<div class="progress progress-striped">
-	    							<div class="progress-bar" style="width: {{ keyresult.percentage }}%;">
+	    							<div class="progress-bar" id="krprogress-{{ keyresult.id }}" style="width: {{ keyresult.percentage }}%;">
 	        							<span>{{ keyresult.percentage }}%</span>
 	    							</div>
 								</div>
-								{% block edit %}
+								{% block edit-button %}
 								{% endblock %}
 							</div>
-							<span class="small details">{{ keyresult.details }}</span>
+							<span class="small details" id="details-{{ keyresult.id }}">
+								{{ keyresult.details }}
+							</span>
+							{% block edit-menu %}
+							{% endblock %}
 						</li>
 					{% endfor %}
 				</ul>

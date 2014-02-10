@@ -1,0 +1,8 @@
+{% extends "okr/base.html" %}
+
+{% block title %}Oops{% endblock %}
+
+{% block content %}
+	<h2>Oops, an error happened!</h2>
+	<a href="{% url 'okr:index' %}">Go back!</a>
+{% endblock %}

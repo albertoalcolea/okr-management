@@ -35,7 +35,13 @@ body {
 	padding-top: 20px;
 }
 
- .okr h2 {
+.okr {
+	border-radius: 7px; 
+	-moz-border-radius: 7px;
+	-webkit-border-radius: 7px;
+}
+
+.okr h2 {
 	margin-bottom: 20px;
 	font-size: 24px;
 	font-weight: 700;
@@ -83,6 +89,29 @@ body {
 	margin-left: 20px;
 	color: #888;
 	font-style: italic;
+}
+
+.okr .edit {
+	margin-top: 10px;
+	margin-left: 20px;
+	margin-bottom: 30px;
+	display: none;
+	padding: 20px 10px 10px 10px;
+	background-color: #E4E5E6;
+	border-radius: 7px; 
+	-moz-border-radius: 7px;
+	-webkit-border-radius: 7px;
+}
+
+.okr .edit label {
+	font-size: 0.9em;
+	font-weight: normal;
+}
+
+.okr .edit #id_type_data,
+.okr .edit #id_obtained,
+.okr .edit #id_expected {
+	width: 100px;
 }
 
  .okr .end-date {

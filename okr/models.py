@@ -26,7 +26,8 @@ class KeyResult(models.Model):
 
 	objective = models.ForeignKey(Objective)
 	name = models.CharField(max_length=200)
-	type_data = models.CharField(max_length=1, 
+	type_data = models.CharField('Type', 
+								 max_length=1, 
 								 choices=TYPE_DATA_CHOICES, 
 								 default=POSITIVE)
 	obtained = models.FloatField()
