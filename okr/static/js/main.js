@@ -101,12 +101,18 @@ $(document).ready(function() {
 function editMode() {
     $('#details-' + id).hide(DURATION_ANIMATION);
     $('#edit-' + id).show(DURATION_ANIMATION);
+    $('html, body').animate({
+        scrollTop: $('#kr-' + id).offset().top - 25
+    }, DURATION_ANIMATION);
 }
 
 
 function detailsMode() {
     $('#details-' + id).show(DURATION_ANIMATION);
     $('#edit-' + id).hide(DURATION_ANIMATION);
+    $('html, body').animate({
+        scrollTop: $('#kr-' + id).offset().top - 25
+    }, DURATION_ANIMATION);
 }
 
 

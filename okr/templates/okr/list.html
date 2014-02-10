@@ -12,7 +12,7 @@
 				</div>
 				<ul>
 					{% for keyresult in okr.keyresults %}
-						<li>
+						<li id="kr-{{ keyresult.id }}">
 							<h4 id="krname-{{ keyresult.id }}">{{ keyresult.name }}</h4>
 							<div class="progress-container">
 								<div class="progress progress-striped">
