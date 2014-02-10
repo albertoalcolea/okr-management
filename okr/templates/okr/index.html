@@ -21,24 +21,26 @@
 	<div class="edit" id="edit-{{ keyresult.id }}">
 		<form method="post" class="form-horizontal">
 			{% csrf_token %}
-			{#{{ keyresult.form }}#}
 			{% for field in keyresult.form.visible_fields %}
 				<div class="form-group">
 					<label for="{{ field.id_for_label }}" class="col-sm-2 control-label">
 						{{ field.label }}:
 					</label>
 					<div class="col-sm-9">
-	                	{{ field.errors }}
-	                	{{ field.help_text}}
-	                	{{ field }}
-	                </div>
-                </div>
-            {% endfor %}
-            <div class="form-group">
-			    <div class="col-sm-offset-2 col-sm-9">
-			      <input id="krbtn-{{ keyresult.id }}" type="button" class="btn btn-primary btn-sm" value="Save	">
-			    </div>
-		  	</div>
+						{{ field.errors }}
+						<div id="krerror-{{ keyresult.id }}-{{ field.id_for_label }}" class="error-msg">
+						</div>
+						{# {{ field.help_text}} #}
+						{{ field }}
+					</div>
+				</div>
+			{% endfor %}
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-sm-9">
+				  	<input id="krbtn-{{ keyresult.id }}" type="button" class="btn btn-primary btn-sm" value="Save">
+				  	<input id="krcancel-{{ keyresult.id }}" type="button" class="btn btn-default btn-sm" value="Cancel">
+				</div>
+			</div>
 		</form>
 	</div>
 {% endblock %}

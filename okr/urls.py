@@ -6,5 +6,5 @@ from okr import views
 urlpatterns = patterns('',
 	url(r'^$', views.index, name='index'),	
 	url(r'^archived/$', views.archived, name='archived'),	
-	url(r'^ajax_test/$', views.ajax_test, name='ajax_test'),	
+	url(r'^edit_kr/$', views.edit_kr, name='edit_kr'),		
 )

@@ -114,6 +114,13 @@ body {
 	width: 100px;
 }
 
+.okr .edit .error-msg {	
+	display: none;
+	color: #a94442;
+	margin-bottom: 5px;
+	font-weight: 700;
+}
+
  .okr .end-date {
  	font-size: small;
  }

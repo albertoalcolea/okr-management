@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import render, render_to_response
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseBadRequest
 from django.utils import timezone
-from django.utils import simplejson
+import json
 
 from okr.models import Objective, KeyResult
 from okr.forms import KeyResultForm
@@ -67,25 +67,31 @@ def archived(request):
 	return render(request, 'okr/archived.html', list_okrs(objectives_list))
 
 
-def ajax_test(request):
-	if request.method == 'POST' and request.is_ajax:
-		form = KeyResultForm(request.POST)
-		if form.is_valid():
-			kr = KeyResult.objects.get(id=request.POST['id'])
-			kr.name 		= request.POST['name']
-			kr.type_data 	= request.POST['type_data']
-			kr.expected 	= float(request.POST['expected'])
-			kr.obtained 	= float(request.POST['obtained'])
-			kr.save()
+def edit_kr(request):
+	if not request.is_ajax():
+		raise Http404
 
+	if request.method == 'POST' and request.POST.has_key('id'):
+		kr = KeyResult.objects.get(id=request.POST['id'])
+		form = KeyResultForm(request.POST, instance=kr)
+		if form.is_valid():
+			form.save()
 			response = {
-				'name': kr.name,
-				'percentage': kr.percentage(),
-				'details': get_details(kr.type_data, kr.obtained, kr.expected),
+				'status': 'ok',
+				'data': {
+					'name': kr.name,
+					'percentage': kr.percentage(),
+					'details': get_details(kr.type_data, kr.obtained, kr.expected),
+				}
 			}   
-			return HttpResponse(simplejson.dumps(response), 
-				mimetype='application/javascript')
+			return HttpResponse(json.dumps(response), mimetype='application/json')
+		else:
+			# response = [v for k,v in form.errors.items()]
+			response = {
+				'status': 'error',
+				'data': form.errors
+			}
+			return HttpResponse(json.dumps(response), mimetype='application/json')
 	else:	
-		response = {'status': 'error'}                                                             
-		return HttpResponse(simplejson.dumps(response), 
-			mimetype='application/javascript')
+		response = {'status': 'method-error'}                                                             
+		return HttpResponseBadRequest(json.dumps(response), mimetype='application/json')
