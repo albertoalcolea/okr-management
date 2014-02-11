@@ -3,3 +3,4 @@ venv
 notes
 staticfiles
 manage.py
+dump.sql
