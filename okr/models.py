@@ -7,7 +7,6 @@ class Objective(models.Model):
 	user = models.ForeignKey(User)
 	name = models.CharField(max_length=200)
 	pub_date = models.DateField('publication date', auto_now_add=True)
-	pub_date.editable = True
 	end_date = models.DateField('end date')
 
 	def __unicode__(self): 
@@ -32,6 +31,7 @@ class KeyResult(models.Model):
 								 default=POSITIVE)
 	obtained = models.FloatField()
 	expected = models.FloatField()
+	pub_date = models.DateField('publication date', auto_now_add=True)
 
 	def __unicode__(self): 
 		return self.name

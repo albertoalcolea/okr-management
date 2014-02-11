@@ -24,7 +24,7 @@ def get_details(type_data, obtained, expected):
 def list_okrs(objectives_list, forms=False):
 	okr_list = []
 	for o in objectives_list:
-		key_results_list = KeyResult.objects.filter(objective=o)
+		key_results_list = KeyResult.objects.filter(objective=o).order_by('-pub_date')
 
 		keyresults = []
 		percentage_total = 0
@@ -49,7 +49,7 @@ def list_okrs(objectives_list, forms=False):
 		okr_list.append({
 			'objective': o, 
 			'percentage': percentage_total,
-			'keyresults': keyresults
+			'keyresults': keyresults,
 		})
 
 	return {'okr_list': okr_list} #context

@@ -4,10 +4,6 @@ from okr.models import Objective, KeyResult
 
 
 class ObjectiveAdmin(admin.ModelAdmin):
-	fieldsets = [
-		(None,					{'fields': ['user', 'name', 'end_date']}),
-		('Publication date',	{'fields': ['pub_date'], 'classes': ['collapse']}),
-	]
 	list_display = ('name', 'user', 'pub_date', 'end_date')
 	list_filter = ['pub_date']
 	search_fields = ['name', 'user']
@@ -19,8 +15,10 @@ class KeyResultAdmin(admin.ModelAdmin):
 		('Objective',	{'fields': ['objective']}),
 		('Key Result',	{'fields': ['name', 'type_data', 'expected', 'obtained']}),
 	]
-	list_display = ('name', 'objective', 'type_data', 'expected', 'obtained')
+	list_display = ('name', 'objective', 'type_data', 'expected', 'obtained', 'pub_date')
+	list_filter = ['pub_date']
 	search_fields = ['name', 'objective']
+	date_hierarchy = 'pub_date'
 
 
 admin.site.register(Objective, ObjectiveAdmin)
