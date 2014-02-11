@@ -2,7 +2,7 @@
 
 {% block title %}Archived OKR's{% endblock %}
 
-{% block nav %}
+{% block nav_tabs %}
 	<li>
 		<a href="{% url 'okr:index' %}">Your OKRs</a>
 	</li>
@@ -13,4 +13,37 @@
 
 {% block okr-name %}
 	{{ okr.objective.name }}
+{% endblock %}
+
+{% block paginator %}
+<!--<ul class="pagination">
+	<li class="disabled"><a href="#">&laquo;</a></li>
+	<li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>
+	<li><a href="#">2</a></li>
+	<li><a href="#">3</a></li>
+	<li class="disabled"><a href="#">...</a></li>
+	<li><a href="#">9</a></li>
+	<li><a href="#">10</a></li>
+	<li><a href="#">11</a></li>
+	<li><a href="#">&raquo;</a></li>
+</ul>-->
+<ul class="pagination">
+	{% if okr_list.has_previous %}
+		<li><a href="{% url 'okr:archived_paged' okr_list.previous_page_number %}">&laquo;</a></li>
+	{% else %}
+		<li class="disabled"><a href="#">&laquo;</a></li>
+	{% endif %}
+	{% for page in okr_list.paginator.page_range %}
+		{% if page == okr_list.number %}
+			<li class="active"><a href="{% url 'okr:archived_paged' page %}">{{ page }} <span class="sr-only">(current)</span></a></li>
+		{% else %}
+			<li><a href="{% url 'okr:archived_paged' page %}">{{ page }}</a></li>
+		{% endif %}
+	{% endfor %}
+	{% if okr_list.has_next %}
+		<li><a href="{% url 'okr:archived_paged' okr_list.next_page_number %}">&raquo;</a></li>
+	{% else %}
+		<li class="disabled"><a href="#">&raquo;</a></li>
+	{% endif %}
+</ul>
 {% endblock %}

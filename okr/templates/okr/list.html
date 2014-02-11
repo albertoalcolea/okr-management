@@ -1,4 +1,4 @@
-{% extends "okr/base.html" %}
+{% extends "okr/base_logged.html" %}
 
 {% block content %}
 	{% block add_obj %}
@@ -38,6 +38,7 @@
 				<small class="pull-right">End date: {{ okr.objective.end_date }}</small>
 			</article>
 		{% endfor %}
+		{% block paginator %}{% endblock %}
 	{% else %}
 		<p>No objectives are available.</p>
 	{% endif %}

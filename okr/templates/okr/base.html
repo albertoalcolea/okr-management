@@ -11,30 +11,7 @@
 <body>
 	<div class="container-narrow">
 		<header class="masthead">
-			<nav class="nav nav-pills pull-right">
-				{% block nav %}
-					<li class="active">
-						<a href="{% url 'okr:index' %}">Your OKRs</a>
-					</li>
-					<li>
-						<a href="{% url 'okr:archived' %}">Archived</a>
-					</li>
-				{% endblock %}
-					<li class="dropdown">
-						<a class="dropdown-toggle" data-toggle="dropdown" href="#">
-							<span class="glyphicon glyphicon-cog"></span>
-						</a>
-						<ul class="dropdown-menu">
-      						<li>
-      							<a href="#">Settings</a>
-      						</li>
-      						<li class="divider"></li>
-      						<li>
-      							<a href="#">Logout</a>
-      						</li>
-    					</ul>
-					</li>
-			</nav>
+			{% block nav %}{% endblock %}
 			<h1 class="text-muted">OKR Magement System</h1>
 			{# <h1 class="muted"><a href='{% url 'okr:index' %}'>OKR Management System</a></h1> #}
 		</header>

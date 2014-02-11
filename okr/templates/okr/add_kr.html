@@ -1,8 +1,8 @@
-{% extends "okr/base.html" %}
+{% extends "okr/base_logged.html" %}
 
 {% block title %}Add Key Result{% endblock %}
 
-{% block nav %}
+{% block nav_tabs %}
 	<li class="active">
 		<a href="{% url 'okr:index' %}">Your OKRs</a>
 	</li>
@@ -18,17 +18,21 @@
 		<form method="post" action="{% url 'okr:add_kr' objective.id %}" class="form-horizontal">
 			{% csrf_token %}
 			{% for field in form.visible_fields %}
+			{% if not field.errors %}
 			<div class="form-group">
-					<label for="{{ field.id_for_label }}" class="col-sm-2 control-label">
-						{{ field.label }}:
-					</label>
-					<div class="col-sm-9">
-						<div class="error-msg" style="display:block">
-						{{ field.errors }}
-						</div>
-						{{ field }}
+			{% else %}
+			<div class="form-group has-error">
+			{% endif %}
+				<label for="{{ field.id_for_label }}" class="col-sm-2 control-label">
+					{{ field.label }}:
+				</label>
+				<div class="col-sm-9">
+					<div class="error-msg" style="display:block">
+					{{ field.errors }}
 					</div>
+					{{ field }}
 				</div>
+			</div>
 			{% endfor %}
 			<div class="form-group">
 				<div class="col-sm-offset-2 col-sm-9">

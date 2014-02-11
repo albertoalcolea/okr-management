@@ -2,12 +2,14 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseRedirect, Http404
 from django.core.urlresolvers import reverse
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.utils import timezone
 import json
 
 from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login, logout
 from okr.models import Objective, KeyResult
-from okr.forms import ObjectiveForm, KeyResultForm
+from okr.forms import ObjectiveForm, KeyResultForm, AuthForm
 
 
 def get_details(type_data, obtained, expected):
@@ -46,19 +48,37 @@ def list_okrs(objectives_list, show_forms=False):
 			'keyresults': keyresults,
 		})
 
-	return {'okr_list': okr_list} #context
+	return okr_list
 
 
 def index(request):
 	objectives_list = Objective.objects.filter(
 		end_date__gte=timezone.now()).order_by('end_date')
-	return render(request, 'okr/index.html', list_okrs(objectives_list, True))
+	context = {'okr_list': list_okrs(objectives_list, True)}
+	return render(request, 'okr/visible.html', context)
 
 
 def archived(request):
+	return archived_paged(request, 1)
+
+
+def archived_paged(request, page):
 	objectives_list = Objective.objects.filter(
 		end_date__lt=timezone.now()).order_by('end_date')
-	return render(request, 'okr/archived.html', list_okrs(objectives_list))
+	
+	okr_list = list_okrs(objectives_list)
+	paginator = Paginator(okr_list, 7)
+
+	try:
+		okrs = paginator.page(page)
+	except PageNotAnInteger:
+		# If page is not an integer, deliver first page.
+		okrs = paginator.page(1)
+	except EmptyPage:
+		# If page is out of range (e.g. 9999), deliver last page of results.
+		okrs = paginator.page(paginator.num_pages)
+
+	return render(request, 'okr/archived.html', {'okr_list': okrs})
 
 
 def edit_kr(request):
@@ -114,19 +134,13 @@ def add_kr(request, o):
 			kr.objective = obj
 			kr.save()
 			return HttpResponseRedirect(reverse('okr:index'))
-		else:
-			context = {
-				'form': form,
-				'objective': obj
-			}
-			return render(request, "okr/add_kr.html", context)	
 	else:
 		form = KeyResultForm()
-		context = {
-			'form': form,
-			'objective': obj
-		}
-		return render(request, "okr/add_kr.html", context)
+	context = {
+		'form': form,
+		'objective': obj
+	}
+	return render(request, "okr/add_kr.html", context)
 
 
 def delete_kr(request, id):
@@ -144,13 +158,10 @@ def add_obj(request):
 			o.user = user
 			o.save()
 			return HttpResponseRedirect(reverse('okr:index'))
-		else:
-			context = {'form': form}
-			return render(request, "okr/add_obj.html", context)
 	else:
 		form = ObjectiveForm()
-		context = {'form': form}
-		return render(request, "okr/add_obj.html", context)
+	context = {'form': form}
+	return render(request, "okr/add_obj.html", context)
 
 
 def edit_obj(request, id):
@@ -160,21 +171,44 @@ def edit_obj(request, id):
 		if form.is_valid():
 			form.save()
 			return HttpResponseRedirect(reverse('okr:index'))
-		else:
-			context = {
-				'form': form,
-				'objective': obj
-			}
-			return render(request, "okr/edit_obj.html", context)
 	else:
 		form = ObjectiveForm(instance=obj)
-		context = {
-			'form': form,
-			'objective': obj
-		}
-		return render(request, "okr/edit_obj.html", context)
+	context = {
+		'form': form,
+		'objective': obj
+	}
+	return render(request, "okr/edit_obj.html", context)
 
 
 def delete_obj(request, id):
 	get_object_or_404(Objective, pk=id).delete()
 	return HttpResponseRedirect(reverse('okr:index'))
+
+
+def login(request):
+	if request.method == "POST":
+		form = AuthForm(request.POST)
+		if form.is_valid:
+			username = request.POST['username']
+			password = request.POST['password']
+			user = authenticate(username=username, password=password)
+			if user is not None:
+				if user.is_active:
+					# Username and password are correct and user is marked as "active"
+					login(request, user)
+					return HttpResponseRedirect(reverse('okr:index'))
+				else:
+					# TODO: ir a pagina de error: usuario desactivado
+					pass
+			else:
+				# TODO: ir a pagina de error: usuario invalido
+				pass
+	else:
+		form = AuthForm()
+	context = {'form': form}
+	return render(request, 'okr/login.html', context)
+
+
+def logout(request):
+	#logout(request)
+	return HttpResponseRedirect(reverse('okr:login'))

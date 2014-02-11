@@ -132,6 +132,9 @@ function editMode(id) {
 	// Update the form fields
 	updateKRFields(id)
 
+	// Hide previous errors
+	hideErrors(id)
+
 	// If a edit panel is open and it is above this, when we'll hide
 	// and we'll scroll down, the offset will be incorrect
 	added = 0

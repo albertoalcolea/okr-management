@@ -1,0 +1,43 @@
+{% extends "okr/base.html" %}
+
+{% block title %}OKR Management System{% endblock %}
+
+{% block content %}
+	<article class="login">
+		<h2>Insert your user and pass:</h2>
+		<form method="post" action="{% url 'okr:login' %}" class="form-horizontal">
+			{% csrf_token %}
+			{% if form.non_field_errors %}
+          	<div class="alert alert-danger">
+            	{#{{ form.non_field_errors|striptags }}#}
+            	{{ form.non_field_errors }}
+          	</div>
+      		{% endif %}
+			{% for field in form %}
+			{% if not field.errors %}
+			<div class="form-group">
+			{% else %}
+			<div class="form-group has-error">
+			{% endif %}
+				<label for="{{ field.id_for_label }}" class="col-sm-2 control-label">
+					{{ field.label }}:
+				</label>
+				<div class="col-sm-9">
+					<div class="error-msg" style="display:block">
+					{{ field.errors }}
+					</div>
+					{{ field }}
+				</div>
+			</div>
+			{% endfor %}
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-sm-9">
+				  	<input id="add" type="submit" class="btn btn-primary btn-sm" value="Login">
+				</div>
+			</div>
+		</form>
+		<div style="margin-top: 90px">
+		{{ form }}
+		</div>
+	</article>
+{% endblock %}

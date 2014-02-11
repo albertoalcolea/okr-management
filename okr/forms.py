@@ -1,4 +1,5 @@
 from django.forms import ModelForm, ValidationError
+from django.contrib.auth.forms import AuthenticationForm
 from okr.models import Objective, KeyResult
 import datetime
 
@@ -16,9 +17,10 @@ class ObjectiveForm(ModelForm):
 			field.widget.attrs['class'] = 'form-control input-sm'
 
 	def clean(self):
-		# end_date >= pub_date
 		end_date = self.cleaned_data.get('end_date', None)
-		if (end_date < datetime.date.today()):
+
+		# end_date >= pub_date
+		if end_date and (end_date < datetime.date.today()):
 			self._errors['end_date'] = 'End date must be later than today.'
 
 		return self.cleaned_data
@@ -58,3 +60,11 @@ class KeyResultForm(ModelForm):
 				# raise ValidationError('Expected must be 1.')
 
 		return self.cleaned_data
+
+
+class AuthForm(AuthenticationForm):
+	# Configured to Bootstrap classes
+	def __init__(self, *args, **kwargs):
+		super(AuthForm, self).__init__(*args, **kwargs)
+		for field_name, field in self.fields.items():
+			field.widget.attrs['class'] = 'form-control input-sm'

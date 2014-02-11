@@ -39,14 +39,21 @@ body {
 	margin-bottom: 20px;
 }
 
-.okr {
+.login {
+	padding: 10px 20px 10px 20px;
+	margin-bottom: 30px;
+}
+
+.okr,
+.login {
 	clear: both;
 	border-radius: 7px; 
 	-moz-border-radius: 7px;
 	-webkit-border-radius: 7px;
 }
 
-.okr h2 {
+.okr h2,
+.login h2 {
 	margin-bottom: 20px;
 	font-size: 24px;
 	font-weight: 700;
@@ -114,6 +121,11 @@ label {
 	font-weight: normal;
 }
 
+#id_username,
+#id_password {
+	width: 170px;
+}
+
 #id_type_data,
 #id_obtained,
 #id_expected,
@@ -126,6 +138,16 @@ label {
 	color: #a94442;
 	margin-bottom: 5px;
 	font-weight: 700;
+}
+
+.error-msg ul {
+	padding-left: 20px;
+	
+}
+
+.error-msg li {
+	display: list-item;
+	margin-bottom: 0;
 }
 
 footer {

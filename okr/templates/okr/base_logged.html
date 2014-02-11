@@ -1,0 +1,28 @@
+{% extends "okr/base.html" %}
+
+{% block nav %}
+<nav class="nav nav-pills pull-right">
+	{% block nav_tabs %}
+		<li class="active">
+			<a href="{% url 'okr:index' %}">Your OKRs</a>
+		</li>
+		<li>
+			<a href="{% url 'okr:archived' %}">Archived</a>
+		</li>
+	{% endblock %}
+		<li class="dropdown">
+			<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+				<span class="glyphicon glyphicon-cog"></span>
+			</a>
+			<ul class="dropdown-menu">
+					<li>
+						<a href="#">Settings</a>
+					</li>
+					<li class="divider"></li>
+					<li>
+						<a href="{% url 'okr:logout' %}">Logout</a>
+					</li>
+			</ul>
+		</li>
+</nav>
+{% endblock %}

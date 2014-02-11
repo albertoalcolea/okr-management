@@ -8,7 +8,7 @@ class ObjectiveAdmin(admin.ModelAdmin):
 	list_filter = ['pub_date']
 	search_fields = ['name', 'user']
 	date_hierarchy = 'pub_date'
-	ordering = ('end_date',)
+	ordering = ('-end_date',)
 
 
 class KeyResultAdmin(admin.ModelAdmin):

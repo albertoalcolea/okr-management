@@ -14,9 +14,12 @@ class Objective(models.Model):
 		return self.name
 
 	def percentage_total(self):
-		sum_percentages = self.keyresult_set.aggregate(percentage_total=Sum("percentage"))
 		num_kr = self.keyresult_set.count()
-		return sum_percentages['percentage_total'] / num_kr
+		if num_kr > 0:
+			sum_percentages = self.keyresult_set.aggregate(percentage_total=Sum("percentage"))
+			return sum_percentages['percentage_total'] / num_kr
+		else:
+			return 0.0
 
 
 class KeyResult(models.Model):
