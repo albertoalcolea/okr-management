@@ -8,7 +8,7 @@ import json
 
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from okr.forms import ObjectiveForm, KeyResultForm, AuthForm, RegisterForm
+from okr.forms import ObjectiveForm, KeyResultForm, AuthForm, RegisterForm, ChangePasswordForm
 from okr.models import Objective, KeyResult
 
 
@@ -230,3 +230,15 @@ def register(request):
 		login(request, user)
 		return HttpResponseRedirect(reverse('okr:index'))
 	return render(request, 'okr/register.html', {'form': form})
+
+
+@login_required
+def change_password(request):
+	if request.method == 'POST':
+		form = ChangePasswordForm(user=request.user, data=request.POST)
+		if form.is_valid():
+			form.save()
+			return HttpResponseRedirect(reverse('okr:index'))
+	else:
+		form = ChangePasswordForm(user=request.user)
+	return render(request, 'okr/change_password.html', {'form': form})
