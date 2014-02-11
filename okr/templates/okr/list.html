@@ -6,7 +6,7 @@
 	{% if okr_list %}
 		{% for okr in okr_list %}
 			<article class="okr jumbotron">
-				<h2><a href="#">{{ okr.objective.name }}</a></h2>
+				<h2>{% block okr-name %}{% endblock %}</h2>
 				<div class="progress progress-striped">
 					<div class="progress-bar progress-bar-danger" style="width: {{ okr.percentage }}%;">
 						<span>{{ okr.percentage }}%</span>

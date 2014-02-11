@@ -51,6 +51,7 @@ body {
 	font-size: 24px;
 	font-weight: 700;
 	line-height: 1.1;
+	color: #428bca;
  }
 
  .okr > .progress {
@@ -108,18 +109,19 @@ body {
 	-webkit-border-radius: 7px;
 }
 
-.okr .edit label {
+label {
 	font-size: 0.9em;
 	font-weight: normal;
 }
 
-.okr .edit #id_type_data,
-.okr .edit #id_obtained,
-.okr .edit #id_expected {
+#id_type_data,
+#id_obtained,
+#id_expected,
+#id_end_date {
 	width: 100px;
 }
 
-.okr .edit .error-msg {	
+.error-msg {	
 	display: none;
 	color: #a94442;
 	margin-bottom: 5px;

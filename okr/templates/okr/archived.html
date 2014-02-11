@@ -10,3 +10,7 @@
 		<a href="{% url 'okr:archived' %}">Archived</a>
 	</li>
 {% endblock %}
+
+{% block okr-name %}
+	{{ okr.objective.name }}
+{% endblock %}

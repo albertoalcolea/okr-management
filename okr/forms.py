@@ -1,20 +1,41 @@
 from django.forms import ModelForm, ValidationError
 from okr.models import Objective, KeyResult
+import datetime
 
 
-# Configured to Bootstrap classes
+class ObjectiveForm(ModelForm):
+
+	class Meta:
+		model = Objective
+		fields = ('user', 'name', 'end_date')
+
+	# Configured to Bootstrap classes
+	def __init__(self, *args, **kwargs):
+		super(ObjectiveForm, self).__init__(*args, **kwargs)
+		for field_name, field in self.fields.items():
+			field.widget.attrs['class'] = 'form-control input-sm'
+
+	def clean(self):
+		# end_date >= pub_date
+		end_date = self.cleaned_data.get('end_date', None)
+		if (end_date < datetime.date.today()):
+			self._errors['end_date'] = 'End date must be later than today.'
+
+		return self.cleaned_data
+
+
+
 class KeyResultForm(ModelForm):
 
 	class Meta:
 		model = KeyResult
 		fields = ('name', 'type_data', 'expected', 'obtained')
 
-
+	# Configured to Bootstrap classes
 	def __init__(self, *args, **kwargs):
 		super(KeyResultForm, self).__init__(*args, **kwargs)
 		for field_name, field in self.fields.items():
 			field.widget.attrs['class'] = 'form-control input-sm'
-
 
 	def clean(self):
 		obtained = self.cleaned_data.get('obtained', None)

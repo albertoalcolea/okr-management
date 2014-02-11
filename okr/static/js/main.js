@@ -99,7 +99,14 @@ $(document).ready(function() {
 	$("[id^=krcancel-]").click(function() {
 		id = $(this).attr('id').split('-')[1];
 		detailsMode(id);
-	})
+	});
+
+	$('#cancel').click(function() {
+		window.location.href = '/okr/';
+	});
+
+	// Datepicker calendar
+	$('#id_end_date').datepicker()
 });
 
 

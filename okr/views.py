@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
-from django.shortcuts import render, render_to_response
-from django.http import HttpResponse, HttpResponseBadRequest, Http404
+from django.shortcuts import render, get_object_or_404
+from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseRedirect, Http404
+from django.core.urlresolvers import reverse
 from django.utils import timezone
 import json
 
 from okr.models import Objective, KeyResult
-from okr.forms import KeyResultForm
+from okr.forms import ObjectiveForm, KeyResultForm
 
 
 def get_details(type_data, obtained, expected):
@@ -72,29 +73,25 @@ def edit_kr(request):
 		raise Http404
 
 	if request.method == 'POST' and request.POST.has_key('id'):
-		try:
-			kr = KeyResult.objects.get(id=request.POST['id'])
-			form = KeyResultForm(request.POST, instance=kr)
-			if form.is_valid():
-				form.save()
-				response = {
-					'status': 'ok',
-					'data': {
-						'name': kr.name,
-						'percentage': kr.percentage(),
-						'details': get_details(kr.type_data, kr.obtained, kr.expected),
-					}
-				}   
-				return HttpResponse(json.dumps(response), mimetype='application/json')
-			else:
-				response = {
-					'status': 'error',
-					'data': form.errors
+		kr = get_object_or_404(KeyResult, id=request.POST['id'])
+		form = KeyResultForm(request.POST, instance=kr)
+		if form.is_valid():
+			form.save()
+			response = {
+				'status': 'ok',
+				'data': {
+					'name': kr.name,
+					'percentage': kr.percentage(),
+					'details': get_details(kr.type_data, kr.obtained, kr.expected),
 				}
-				return HttpResponse(json.dumps(response), mimetype='application/json')
-		except (KeyError, KeyResult.DoesNotExist):
-			response = {'status': 'method-error'}                                                             
-			return HttpResponseBadRequest(json.dumps(response), mimetype='application/json')
+			}   
+			return HttpResponse(json.dumps(response), mimetype='application/json')
+		else:
+			response = {
+				'status': 'error',
+				'data': form.errors
+			}
+			return HttpResponse(json.dumps(response), mimetype='application/json')
 	else:	
 		response = {'status': 'method-error'}                                                             
 		return HttpResponseBadRequest(json.dumps(response), mimetype='application/json')
@@ -102,17 +99,75 @@ def edit_kr(request):
 
 def show_kr(request, id):
 	if not request.is_ajax():
-	 	raise Http404
+		raise Http404
 
-	try:
-		kr = KeyResult.objects.get(id=id)
-		response = {
-			'name': kr.name,
-			'type_data': kr.type_data,
-			'expected': kr.expected,
-			'obtained': kr.obtained
+	kr = get_object_or_404(KeyResult, id=id)
+	response = {
+		'name': kr.name,
+		'type_data': kr.type_data,
+		'expected': kr.expected,
+		'obtained': kr.obtained
+	}
+	return HttpResponse(json.dumps(response), mimetype='application/json')
+
+
+def add_kr(request, o):
+	obj = get_object_or_404(Objective, id=o)
+	if request.method == "POST":
+		form = KeyResultForm(request.POST)
+		if form.is_valid():
+			kr = form.save(commit=False)
+			kr.objective = obj
+			kr.save()
+			return HttpResponseRedirect(reverse('okr:index'))
+		else:
+			context = {
+				'form': form,
+				'objective': obj
+			}
+			return render(request, "okr/add_kr.html", context)	
+	else:
+		form = KeyResultForm()
+		context = {
+			'form': form,
+			'objective': obj
 		}
-		return HttpResponse(json.dumps(response), mimetype='application/json')
-	except (KeyError, KeyResult.DoesNotExist):
-		response = {'status': 'method-error'}
-		return HttpResponseBadRequest(json.dumps(response), mimetype='application/json')
+		return render(request, "okr/add_kr.html", context)
+
+
+
+def add_obj(request):
+	if request.method == "POST":
+		form = ObjectiveForm(request.POST)
+		if form.is_valid():
+			form.save()
+			return HttpResponseRedirect(reverse('okr:index'))
+		else:
+			context = {'form': form}
+			return render(request, "okr/add_obj.html", context)
+	else:
+		form = ObjectiveForm()
+		context = {'form': form}
+		return render(request, "okr/add_obj.html", context)
+
+
+def edit_obj(request, id):
+	obj = get_object_or_404(Objective, id=id)
+	if request.method == "POST":
+		form = ObjectiveForm(request.POST, instance=obj)
+		if form.is_valid():
+			form.save()
+			return HttpResponseRedirect(reverse('okr:index'))
+		else:
+			context = {
+				'form': form,
+				'objective': obj
+			}
+			return render(request, "okr/edit_obj.html", context)
+	else:
+   		form = ObjectiveForm(instance=obj)
+		context = {
+			'form': form,
+			'objective': obj
+		}
+		return render(request, "okr/edit_obj.html", context)

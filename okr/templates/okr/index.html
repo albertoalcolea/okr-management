@@ -13,11 +13,15 @@
 
 {% block add_obj %}
 	<small class="pull-left" id="add-obj">
-		<a href="#">
+		<a href="{% url 'okr:add_obj' %}">
 			<span class="glyphicon glyphicon-plus"></span>
 			Add Objective
 		</a>
 	</small>
+{% endblock %}
+
+{% block okr-name %}
+	<a href="{% url 'okr:edit_obj' okr.objective.id %}">{{ okr.objective.name }}</a>
 {% endblock %}
 
 {% block edit-button %}
@@ -36,8 +40,8 @@
 						{{ field.label }}:
 					</label>
 					<div class="col-sm-9">
-						{{ field.errors }}
 						<div id="krerror-{{ keyresult.id }}-{{ field.id_for_label }}" class="error-msg">
+						{# {{ field.errors }} #}
 						</div>
 						{# {{ field.help_text}} #}
 						{{ field }}
@@ -56,7 +60,7 @@
 
 {% block add-kr %}
 	<small class="pull-left">
-		<a href="#">
+		<a href="{% url 'okr:add_kr' okr.objective.id %}">
 			<span class="glyphicon glyphicon-plus"></span>
 			Add Key Result
 		</a>
