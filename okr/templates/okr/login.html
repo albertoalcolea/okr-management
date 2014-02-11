@@ -4,7 +4,7 @@
 
 {% block content %}
 	<article class="login">
-		<h2>Insert your user and pass:</h2>
+		<h2>Welcome:</h2>
 		<form method="post" action="{% url 'okr:login' %}" class="form-horizontal">
 			{% csrf_token %}
 			{% if form.non_field_errors %}
@@ -19,7 +19,7 @@
 			{% else %}
 			<div class="form-group has-error">
 			{% endif %}
-				<label for="{{ field.id_for_label }}" class="col-sm-2 control-label">
+				<label for="{{ field.id_for_label }}" class="col-sm-3 control-label">
 					{{ field.label }}:
 				</label>
 				<div class="col-sm-9">
@@ -31,10 +31,14 @@
 			</div>
 			{% endfor %}
 			<div class="form-group">
-				<div class="col-sm-offset-2 col-sm-9">
+				<div class="col-sm-offset-3 col-sm-9">
 				  	<input id="login" type="submit" class="btn btn-primary btn-sm" value="Login">
 				</div>
 			</div>
 		</form>
+		<div id="regiser-now">
+			Don't have an account?
+			<a href="#">Register now</a>
+		</div>
 	</article>
 {% endblock %}

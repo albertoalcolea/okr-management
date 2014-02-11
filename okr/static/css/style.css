@@ -40,8 +40,12 @@ body {
 }
 
 .login {
-	padding: 10px 20px 10px 20px;
+	padding: 5px 40px 10px 40px;
 	margin-bottom: 30px;
+	background-color: #eee;
+	display: table;
+    margin: 0 auto;
+    width: 400px;
 }
 
 .okr,
@@ -119,6 +123,15 @@ body {
 label {
 	font-size: 0.9em;
 	font-weight: normal;
+}
+
+#regiser-now {
+	clear: both;
+	margin-top: 30px;
+	text-align: center;
+	color: #888;
+	text-shadow: 0 1px white;
+	font-size: small;
 }
 
 #id_username,
