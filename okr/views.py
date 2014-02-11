@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import render, render_to_response
-from django.http import HttpResponse, HttpResponseBadRequest
+from django.http import HttpResponse, HttpResponseBadRequest, Http404
 from django.utils import timezone
 import json
 
@@ -72,26 +72,47 @@ def edit_kr(request):
 		raise Http404
 
 	if request.method == 'POST' and request.POST.has_key('id'):
-		kr = KeyResult.objects.get(id=request.POST['id'])
-		form = KeyResultForm(request.POST, instance=kr)
-		if form.is_valid():
-			form.save()
-			response = {
-				'status': 'ok',
-				'data': {
-					'name': kr.name,
-					'percentage': kr.percentage(),
-					'details': get_details(kr.type_data, kr.obtained, kr.expected),
+		try:
+			kr = KeyResult.objects.get(id=request.POST['id'])
+			form = KeyResultForm(request.POST, instance=kr)
+			if form.is_valid():
+				form.save()
+				response = {
+					'status': 'ok',
+					'data': {
+						'name': kr.name,
+						'percentage': kr.percentage(),
+						'details': get_details(kr.type_data, kr.obtained, kr.expected),
+					}
+				}   
+				return HttpResponse(json.dumps(response), mimetype='application/json')
+			else:
+				response = {
+					'status': 'error',
+					'data': form.errors
 				}
-			}   
-			return HttpResponse(json.dumps(response), mimetype='application/json')
-		else:
-			# response = [v for k,v in form.errors.items()]
-			response = {
-				'status': 'error',
-				'data': form.errors
-			}
-			return HttpResponse(json.dumps(response), mimetype='application/json')
+				return HttpResponse(json.dumps(response), mimetype='application/json')
+		except (KeyError, KeyResult.DoesNotExist):
+			response = {'status': 'method-error'}                                                             
+			return HttpResponseBadRequest(json.dumps(response), mimetype='application/json')
 	else:	
 		response = {'status': 'method-error'}                                                             
+		return HttpResponseBadRequest(json.dumps(response), mimetype='application/json')
+
+
+def show_kr(request, id):
+	if not request.is_ajax():
+	 	raise Http404
+
+	try:
+		kr = KeyResult.objects.get(id=id)
+		response = {
+			'name': kr.name,
+			'type_data': kr.type_data,
+			'expected': kr.expected,
+			'obtained': kr.obtained
+		}
+		return HttpResponse(json.dumps(response), mimetype='application/json')
+	except (KeyError, KeyResult.DoesNotExist):
+		response = {'status': 'method-error'}
 		return HttpResponseBadRequest(json.dumps(response), mimetype='application/json')

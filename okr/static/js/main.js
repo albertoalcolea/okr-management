@@ -83,7 +83,6 @@ $(document).ready(function() {
 				detailsMode(id);
 			}
 		});
-		return false;
 	});
 
 
@@ -106,6 +105,9 @@ $(document).ready(function() {
 
 // Show and hide while we are editing
 function editMode(id) {
+	// Update the form fields
+	updateKRFields(id)
+
 	// If a edit panel is open and it is above this, when we'll hide
 	// and we'll scroll down, the offset will be incorrect
 	added = 0
@@ -168,4 +170,25 @@ function updateKR(id, data) {
 	$('#krprogress-' + id).css({'width': data['percentage'] + '%'});
 	$('#krprogress-' + id).find('span').text(data['percentage'] + '%');
 	$('#details-' + id).text(data['details']);
+}
+
+
+// Update key result fields form before editing
+function updateKRFields(id) {
+	// Ajax request
+	$.ajax({
+		type: 'GET',
+		url: '/okr/show_kr/' + id,
+		dataType: 'json',
+		success: function (data) {
+			$('#edit-' + id).find('#id_name').val(data['name']);
+			$('#edit-' + id).find('#id_type_data').val(data['type_data']);
+			$('#edit-' + id).find('#id_expected').val(data['expected']);
+			$('#edit-' + id).find('#id_obtained').val(data['obtained']);
+			return true;
+		},
+		error: function (xhr, errmsg, err) {
+			return false;
+		}
+	});	
 }
