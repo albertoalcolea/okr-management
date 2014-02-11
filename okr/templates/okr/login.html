@@ -9,8 +9,7 @@
 			{% csrf_token %}
 			{% if form.non_field_errors %}
           	<div class="alert alert-danger">
-            	{#{{ form.non_field_errors|striptags }}#}
-            	{{ form.non_field_errors }}
+            	{{ form.non_field_errors|striptags }}
           	</div>
       		{% endif %}
 			{% for field in form %}
@@ -24,7 +23,7 @@
 				</label>
 				<div class="col-sm-9">
 					<div class="error-msg" style="display:block">
-					{{ field.errors }}
+					{{ field.errors|striptags }}
 					</div>
 					{{ field }}
 				</div>
@@ -36,9 +35,9 @@
 				</div>
 			</div>
 		</form>
-		<div id="regiser-now">
+		<div id="login-register-info">
 			Don't have an account?
-			<a href="#">Register now</a>
+			<a href="{% url 'okr:register' %}">Register now</a>
 		</div>
 	</article>
 {% endblock %}

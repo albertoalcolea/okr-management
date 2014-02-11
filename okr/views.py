@@ -8,8 +8,8 @@ import json
 
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from okr.forms import ObjectiveForm, KeyResultForm, AuthForm, RegisterForm
 from okr.models import Objective, KeyResult
-from okr.forms import ObjectiveForm, KeyResultForm, AuthForm
 
 
 #############################################################################
@@ -197,6 +197,9 @@ def delete_obj(request, id):
 #############################################################################
 
 def user_login(request):
+	if request.user.is_authenticated():
+		return HttpResponseRedirect(reverse('okr:index'))
+
 	form = AuthForm(request, request.POST or None)
 	if request.method == "POST" and form.is_valid:
 		user = form.login(request)
@@ -211,3 +214,16 @@ def user_login(request):
 def user_logout(request):
 	logout(request)
 	return HttpResponseRedirect(reverse('okr:login'))
+
+
+def register(request):
+	form = RegisterForm(request.POST or None)
+	if request.method == 'POST' and form.is_valid():
+		form.save()
+		# Login
+		username = request.POST['username']
+		password = request.POST['password1']
+		user = authenticate(username=username, password=password)
+		login(request, user)
+		return HttpResponseRedirect(reverse('okr:index'))
+	return render(request, 'okr/register.html', {'form': form})

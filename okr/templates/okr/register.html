@@ -1,18 +1,11 @@
-{% extends "okr/base_logged.html" %}
+{% extends "okr/base.html" %}
 
-{% block nav_tabs %}
-	<li class="active">
-		<a href="{% url 'okr:index' %}">Your OKRs</a>
-	</li>
-	<li>
-		<a href="{% url 'okr:archived' %}">Archived</a>
-	</li>
-{% endblock %}
+{% block title %}Register{% endblock %}
 
 {% block content %}
 	<article class="okr jumbotron">
-		{% block title_info %}{% endblock %}
-		<form method="post" action="{% block form_action %}{% endblock %}" class="form-horizontal">
+		<h2>Enter your information:</h2>
+		<form method="post" action="{% url 'okr:register' %}" class="form-horizontal">
 			{% csrf_token %}
 			{% if form.non_field_errors %}
           	<div class="alert alert-danger">
@@ -38,11 +31,13 @@
 			{% endfor %}
 			<div class="form-group">
 				<div class="col-sm-offset-2 col-sm-9">
-					{% block submit_button %}{% endblock %}
-				  	<input id="cancel" type="button" class="btn btn-default btn-sm" value="Cancel">
+				  	<input id="register" type="submit" class="btn btn-primary btn-sm" value="Register">
 				</div>
 			</div>
 		</form>
-		{% block delete_link %}{% endblock %}
+		<div id="login-register-info">
+			Already a member?
+			<a href="{% url 'okr:login' %}">Login</a>
+		</div>
 	</article>
 {% endblock %}

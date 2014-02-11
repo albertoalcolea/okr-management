@@ -19,8 +19,7 @@
 			{% csrf_token %}
 			{% if form.non_field_errors %}
           	<div class="alert alert-danger">
-            	{#{{ form.non_field_errors|striptags }}#}
-            	{{ form.non_field_errors }}
+            	{{ form.non_field_errors|striptags }}
           	</div>
       		{% endif %}
 			{% for field in form.visible_fields %}
@@ -34,7 +33,7 @@
 				</label>
 				<div class="col-sm-9">
 					<div class="error-msg" style="display:block">
-					{{ field.errors }}
+					{{ field.errors|striptags }}
 					</div>
 					{{ field }}
 				</div>

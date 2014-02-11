@@ -1,6 +1,8 @@
+from django import forms
 from django.forms import ModelForm, ValidationError
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth import authenticate
+from django.contrib.auth.models import User
 from okr.models import Objective, KeyResult
 import datetime
 
@@ -87,4 +89,25 @@ class AuthForm(AuthenticationForm):
 		username = request.POST['username']
 		password = request.POST['password']
 		user = authenticate(username=username, password=password)
+		return user
+
+
+class RegisterForm(UserCreationForm):
+	email = forms.EmailField(required=True)
+
+	# Configured to Bootstrap classes
+	def __init__(self, *args, **kwargs):
+		super(RegisterForm, self).__init__(*args, **kwargs)
+		for field_name, field in self.fields.items():
+			field.widget.attrs['class'] = 'form-control input-sm'
+
+	class Meta:
+		model = User
+		fields = ('username', 'email', 'password1', 'password2')
+
+	def save(self, commit=True):
+		user = super(RegisterForm, self).save(commit=False)
+		user.email = self.cleaned_data["email"]
+		if commit:
+			user.save()
 		return user
