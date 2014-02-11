@@ -6,12 +6,17 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.utils import timezone
 import json
 
-from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from okr.models import Objective, KeyResult
 from okr.forms import ObjectiveForm, KeyResultForm, AuthForm
 
 
+#############################################################################
+# Key Results
+#############################################################################
+
+# Auxiliar functions
 def get_details(type_data, obtained, expected):
 	if type_data == KeyResult.POSITIVE:
 		details = 'Obtained %d of %d' % (obtained, expected)
@@ -51,17 +56,20 @@ def list_okrs(objectives_list, show_forms=False):
 	return okr_list
 
 
-def index(request):
+@login_required
+def visible(request):
 	objectives_list = Objective.objects.filter(
 		end_date__gte=timezone.now()).order_by('end_date')
 	context = {'okr_list': list_okrs(objectives_list, True)}
 	return render(request, 'okr/visible.html', context)
 
 
+@login_required
 def archived(request):
 	return archived_paged(request, 1)
 
 
+@login_required
 def archived_paged(request, page):
 	objectives_list = Objective.objects.filter(
 		end_date__lt=timezone.now()).order_by('end_date')
@@ -81,9 +89,9 @@ def archived_paged(request, page):
 	return render(request, 'okr/archived.html', {'okr_list': okrs})
 
 
+@login_required
 def edit_kr(request):
-	if not request.is_ajax():
-		raise Http404
+	if not request.is_ajax(): raise Http404
 
 	if request.method == 'POST' and request.POST.has_key('id'):
 		kr = get_object_or_404(KeyResult, id=request.POST['id'])
@@ -111,10 +119,9 @@ def edit_kr(request):
 		return HttpResponseBadRequest(json.dumps(response), mimetype='application/json')
 
 
+@login_required
 def show_kr(request, id):
-	if not request.is_ajax():
-		raise Http404
-
+	if not request.is_ajax(): raise Http404
 	kr = get_object_or_404(KeyResult, id=id)
 	response = {
 		'name': kr.name,
@@ -125,17 +132,15 @@ def show_kr(request, id):
 	return HttpResponse(json.dumps(response), mimetype='application/json')
 
 
+@login_required
 def add_kr(request, o):
 	obj = get_object_or_404(Objective, id=o)
-	if request.method == "POST":
-		form = KeyResultForm(request.POST)
-		if form.is_valid():
-			kr = form.save(commit=False)
-			kr.objective = obj
-			kr.save()
-			return HttpResponseRedirect(reverse('okr:index'))
-	else:
-		form = KeyResultForm()
+	form = KeyResultForm(request.POST or None)
+	if request.method == "POST" and form.is_valid():
+		kr = form.save(commit=False)
+		kr.objective = obj
+		kr.save()
+		return HttpResponseRedirect(reverse('okr:index'))
 	context = {
 		'form': form,
 		'objective': obj
@@ -143,27 +148,28 @@ def add_kr(request, o):
 	return render(request, "okr/add_kr.html", context)
 
 
+@login_required
 def delete_kr(request, id):
 	get_object_or_404(KeyResult, pk=id).delete()
 	return HttpResponseRedirect(reverse('okr:index'))
 
 
+#############################################################################
+# Objectives
+#############################################################################
 
+@login_required
 def add_obj(request):
-	if request.method == "POST":
-		form = ObjectiveForm(request.POST)
-		if form.is_valid():
-			user = User.objects.get(username='admin')
-			o = form.save(commit=False)
-			o.user = user
-			o.save()
-			return HttpResponseRedirect(reverse('okr:index'))
-	else:
-		form = ObjectiveForm()
-	context = {'form': form}
-	return render(request, "okr/add_obj.html", context)
+	form = ObjectiveForm(request.POST or None)
+	if request.method == "POST" and form.is_valid():
+		o = form.save(commit=False)
+		o.user = request.user
+		o.save()
+		return HttpResponseRedirect(reverse('okr:index'))
+	return render(request, "okr/add_obj.html", {'form': form})
 
 
+@login_required
 def edit_obj(request, id):
 	obj = get_object_or_404(Objective, id=id)
 	if request.method == "POST":
@@ -180,14 +186,19 @@ def edit_obj(request, id):
 	return render(request, "okr/edit_obj.html", context)
 
 
+@login_required
 def delete_obj(request, id):
 	get_object_or_404(Objective, pk=id).delete()
 	return HttpResponseRedirect(reverse('okr:index'))
 
 
-def login(request):
+#############################################################################
+# Users
+#############################################################################
+
+def user_login(request):
+	form = AuthForm(request, request.POST or None)
 	if request.method == "POST":
-		form = AuthForm(request.POST)
 		if form.is_valid:
 			username = request.POST['username']
 			password = request.POST['password']
@@ -197,18 +208,10 @@ def login(request):
 					# Username and password are correct and user is marked as "active"
 					login(request, user)
 					return HttpResponseRedirect(reverse('okr:index'))
-				else:
-					# TODO: ir a pagina de error: usuario desactivado
-					pass
-			else:
-				# TODO: ir a pagina de error: usuario invalido
-				pass
-	else:
-		form = AuthForm()
-	context = {'form': form}
-	return render(request, 'okr/login.html', context)
+	return render(request, 'okr/login.html', {'form': form})
 
 
-def logout(request):
-	#logout(request)
+@login_required
+def user_logout(request):
+	logout(request)
 	return HttpResponseRedirect(reverse('okr:login'))

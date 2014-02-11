@@ -1,5 +1,6 @@
 from django.forms import ModelForm, ValidationError
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import authenticate
 from okr.models import Objective, KeyResult
 import datetime
 
@@ -63,6 +64,7 @@ class KeyResultForm(ModelForm):
 
 
 class AuthForm(AuthenticationForm):
+	
 	# Configured to Bootstrap classes
 	def __init__(self, *args, **kwargs):
 		super(AuthForm, self).__init__(*args, **kwargs)

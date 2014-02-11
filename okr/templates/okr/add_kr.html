@@ -17,6 +17,12 @@
 		<h4>Add new key result</h4>
 		<form method="post" action="{% url 'okr:add_kr' objective.id %}" class="form-horizontal">
 			{% csrf_token %}
+			{% if form.non_field_errors %}
+          	<div class="alert alert-danger">
+            	{#{{ form.non_field_errors|striptags }}#}
+            	{{ form.non_field_errors }}
+          	</div>
+      		{% endif %}
 			{% for field in form.visible_fields %}
 			{% if not field.errors %}
 			<div class="form-group">

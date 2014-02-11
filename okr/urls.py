@@ -4,7 +4,7 @@ from okr import views
 
 
 urlpatterns = patterns('',
-    url(r'^$', views.index, name='index'),
+    url(r'^$', views.visible, name='index'),
     url(r'^archived/$', views.archived, name='archived'),
     url(r'^archived/page/(?P<page>\d+)$', views.archived_paged, name='archived_paged'),
     url(r'^edit_kr/$', views.edit_kr, name='edit_kr'),
@@ -14,6 +14,6 @@ urlpatterns = patterns('',
     url(r'^add_obj/$', views.add_obj, name='add_obj'),
     url(r'^edit_obj/(?P<id>\d+)$', views.edit_obj, name='edit_obj'),
     url(r'^delete_obj/(?P<id>\d+)/$', views.delete_obj, name='delete_obj'),
-    url(r'^login/$', views.login, name='login'),
-    url(r'^logout/$', views.logout, name='logout'),
+    url(r'^login/$', views.user_login, name='login'),
+    url(r'^logout/$', views.user_logout, name='logout'),
 )

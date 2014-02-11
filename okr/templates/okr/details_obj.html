@@ -14,6 +14,12 @@
 		{% block title_info %}{% endblock %}
 		<form method="post" action="{% block form_action %}{% endblock %}" class="form-horizontal">
 			{% csrf_token %}
+			{% if form.non_field_errors %}
+          	<div class="alert alert-danger">
+            	{#{{ form.non_field_errors|striptags }}#}
+            	{{ form.non_field_errors }}
+          	</div>
+      		{% endif %}
 			{% for field in form.visible_fields %}
 			{% if not field.errors %}
 			<div class="form-group">
