@@ -59,6 +59,7 @@ def list_okrs(objectives_list, show_forms=False):
 @login_required
 def visible(request):
 	objectives_list = Objective.objects.filter(
+		user=request.user,
 		end_date__gte=timezone.now()).order_by('end_date')
 	context = {'okr_list': list_okrs(objectives_list, True)}
 	return render(request, 'okr/visible.html', context)
@@ -72,6 +73,7 @@ def archived(request):
 @login_required
 def archived_paged(request, page):
 	objectives_list = Objective.objects.filter(
+		user=request.user,
 		end_date__lt=timezone.now()).order_by('end_date')
 	
 	okr_list = list_okrs(objectives_list)
@@ -94,7 +96,8 @@ def edit_kr(request):
 	if not request.is_ajax(): raise Http404
 
 	if request.method == 'POST' and request.POST.has_key('id'):
-		kr = get_object_or_404(KeyResult, id=request.POST['id'])
+		kr = get_object_or_404(KeyResult, 
+			id=request.POST['id'], objective__user=request.user)
 		form = KeyResultForm(request.POST, instance=kr)
 		if form.is_valid():
 			form.save()
@@ -122,7 +125,7 @@ def edit_kr(request):
 @login_required
 def show_kr(request, id):
 	if not request.is_ajax(): raise Http404
-	kr = get_object_or_404(KeyResult, id=id)
+	kr = get_object_or_404(KeyResult, id=id, objective__user=request.user)
 	response = {
 		'name': kr.name,
 		'type_data': kr.type_data,
@@ -134,7 +137,7 @@ def show_kr(request, id):
 
 @login_required
 def add_kr(request, o):
-	obj = get_object_or_404(Objective, id=o)
+	obj = get_object_or_404(Objective, id=o, user=request.user)
 	form = KeyResultForm(request.POST or None)
 	if request.method == "POST" and form.is_valid():
 		kr = form.save(commit=False)
@@ -150,7 +153,7 @@ def add_kr(request, o):
 
 @login_required
 def delete_kr(request, id):
-	get_object_or_404(KeyResult, pk=id).delete()
+	get_object_or_404(KeyResult, pk=id, objective__user=request.user).delete()
 	return HttpResponseRedirect(reverse('okr:index'))
 
 
@@ -171,7 +174,7 @@ def add_obj(request):
 
 @login_required
 def edit_obj(request, id):
-	obj = get_object_or_404(Objective, id=id)
+	obj = get_object_or_404(Objective, id=id, user=request.user)
 	if request.method == "POST":
 		form = ObjectiveForm(request.POST, instance=obj)
 		if form.is_valid():
@@ -188,7 +191,7 @@ def edit_obj(request, id):
 
 @login_required
 def delete_obj(request, id):
-	get_object_or_404(Objective, pk=id).delete()
+	get_object_or_404(Objective, pk=id, user=request.user).delete()
 	return HttpResponseRedirect(reverse('okr:index'))
 
 

@@ -170,6 +170,11 @@ label {
 	margin-bottom: 0;
 }
 
+#no-okr {
+	clear: both;
+	display: block;
+}
+
 footer {
 	font-size: small;
 }
