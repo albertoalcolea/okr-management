@@ -198,16 +198,12 @@ def delete_obj(request, id):
 
 def user_login(request):
 	form = AuthForm(request, request.POST or None)
-	if request.method == "POST":
-		if form.is_valid:
-			username = request.POST['username']
-			password = request.POST['password']
-			user = authenticate(username=username, password=password)
-			if user is not None:
-				if user.is_active:
-					# Username and password are correct and user is marked as "active"
-					login(request, user)
-					return HttpResponseRedirect(reverse('okr:index'))
+	if request.method == "POST" and form.is_valid:
+		user = form.login(request)
+		if user:
+			# Username and password are correct and user is marked as "active"
+			login(request, user)
+			return HttpResponseRedirect(reverse('okr:index'))
 	return render(request, 'okr/login.html', {'form': form})
 
 

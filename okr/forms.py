@@ -70,3 +70,21 @@ class AuthForm(AuthenticationForm):
 		super(AuthForm, self).__init__(*args, **kwargs)
 		for field_name, field in self.fields.items():
 			field.widget.attrs['class'] = 'form-control input-sm'
+
+	def clean(self):
+		username = self.cleaned_data.get('username', None)
+		password = self.cleaned_data.get('password', None)
+		user = authenticate(username=username, password=password)
+		if not user:
+			raise ValidationError("Sorry, that login was invalid. Please try again.")
+		else:
+			if not user.is_active:
+				raise ValidationError("Sorry, that user is inactive.")
+
+		return self.cleaned_data
+
+	def login(self, request):
+		username = request.POST['username']
+		password = request.POST['password']
+		user = authenticate(username=username, password=password)
+		return user
