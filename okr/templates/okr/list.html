@@ -8,7 +8,7 @@
 			<article class="okr jumbotron">
 				<h2>{% block okr-name %}{% endblock %}</h2>
 				<div class="progress progress-striped">
-					<div class="progress-bar progress-bar-danger" style="width: {{ okr.percentage }}%;">
+					<div class="progress-bar progress-bar-danger" id="objprogress-{{ okr.objective.id }}" style="width: {{ okr.percentage }}%;">
 						<span>{{ okr.percentage }}%</span>
 					</div>
 				</div>

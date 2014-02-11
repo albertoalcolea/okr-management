@@ -194,6 +194,11 @@ function updateKR(id, data) {
 	$('#krprogress-' + id).css({'width': data['percentage'] + '%'});
 	$('#krprogress-' + id).find('span').text(data['percentage'] + '%');
 	$('#details-' + id).text(data['details']);
+
+	// Update objective percentage total
+	p = $('#edit-' + id).parents('.okr').find('[id^=objprogress-]')
+	p.css({'width': data['percentage_total'] + '%'});
+	p.find('span').text(data['percentage_total'] + '%');
 }
 
 

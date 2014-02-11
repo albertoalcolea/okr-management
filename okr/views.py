@@ -10,7 +10,6 @@ from okr.models import Objective, KeyResult
 from okr.forms import ObjectiveForm, KeyResultForm
 
 
-
 def get_details(type_data, obtained, expected):
 	if type_data == KeyResult.POSITIVE:
 		details = 'Obtained %d of %d' % (obtained, expected)
@@ -24,34 +23,26 @@ def get_details(type_data, obtained, expected):
 	return details
 
 
-def list_okrs(objectives_list, forms=False):
+def list_okrs(objectives_list, show_forms=False):
 	okr_list = []
 	for o in objectives_list:
 		key_results_list = KeyResult.objects.filter(objective=o).order_by('-pub_date')
 
 		keyresults = []
-		percentage_total = 0
-
-		if len(key_results_list) > 0:
+		if key_results_list:
 			for k in key_results_list:
-				kform = None
-				if forms:
-					kform = KeyResultForm(instance=k)
-
 				keyresults.append({
 					'id': k.id,
 					'name': k.name,
-					'percentage': k.percentage(),
+					'percentage': int(k.percentage),
 					'details': get_details(k.type_data, k.obtained, k.expected),
-					'form': kform,
 				})
-				percentage_total += k.percentage()
-				
-			percentage_total = percentage_total / len(key_results_list)
+				if show_forms:
+					keyresults[-1]['form'] = KeyResultForm(instance=k)
 			
 		okr_list.append({
 			'objective': o, 
-			'percentage': percentage_total,
+			'percentage': int(o.percentage_total()),
 			'keyresults': keyresults,
 		})
 
@@ -83,8 +74,9 @@ def edit_kr(request):
 				'status': 'ok',
 				'data': {
 					'name': kr.name,
-					'percentage': kr.percentage(),
+					'percentage': int(kr.percentage),
 					'details': get_details(kr.type_data, kr.obtained, kr.expected),
+					'percentage_total': int(kr.objective.percentage_total()),
 				}
 			}   
 			return HttpResponse(json.dumps(response), mimetype='application/json')

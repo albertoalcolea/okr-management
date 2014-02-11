@@ -20,12 +20,26 @@ def create_okr(o_name, num_kr, date):
 			type_data=KeyResult.POSITIVE, obtained=2, expected=6)
 
 
+def create_obj():
+	u = User.objects.create_user(username='admin', password='password',
+		first_name='admin', last_name='admin', email='admin@admin.com')
+
+	return Objective.objects.create(user=u, name='kr test', 
+			end_date=timezone.now() - datetime.timedelta(days=30))
+
+
+def create_kr(o, type_data, obtained, expected):
+	return KeyResult.objects.create(objective=o, name='test',
+			type_data=type_data, obtained=obtained, expected=expected)
+
+
 def create_kr_form(name, type_data, expected, obtained):
 	return KeyResultForm(data={'name': name,
 							   'type_data': type_data,
 							   'expected': expected,
 							   'obtained': obtained
 	})
+
 
 
 def create_obj_form(name, end_date):
@@ -41,22 +55,25 @@ def create_obj_form(name, end_date):
 
 class KeyResultModelTest(TestCase):
 	def test_positive_percentage(self):
-		r = KeyResult(obtained=2, expected=8)
-		self.assertEqual(r.percentage(), 25)
-		r = KeyResult(obtained=2, expected=6)
-		self.assertEqual(r.percentage(), 33)
+		o = create_obj()
+		r = create_kr(o, KeyResult.POSITIVE, obtained=2, expected=8)
+		self.assertEqual(round(r.percentage, 2), 25.0)
+		r = create_kr(o, KeyResult.POSITIVE, obtained=2, expected=6)
+		self.assertEqual(round(r.percentage, 2), 33.33)
 	
 	def test_negative_percentage(self):
-		r = KeyResult(type_data=KeyResult.NEGATIVE, obtained=2, expected=3)
-		self.assertEqual(r.percentage(), 33)
-		r = KeyResult(type_data=KeyResult.NEGATIVE, obtained=1, expected=3)
-		self.assertEqual(r.percentage(), 66)
+		o = create_obj()
+		r = create_kr(o, KeyResult.NEGATIVE, obtained=2, expected=3)
+		self.assertEqual(round(r.percentage, 2), 33.33)
+		r = create_kr(o, KeyResult.NEGATIVE, obtained=1, expected=3)
+		self.assertEqual(round(r.percentage, 2), 66.67)
 
 	def test_binary_percentage(self):
-		r = KeyResult(type_data=KeyResult.BINARY, obtained=0, expected=1)
-		self.assertEqual(r.percentage(), 0)
-		r = KeyResult(type_data=KeyResult.BINARY, obtained=1, expected=1)
-		self.assertEqual(r.percentage(), 100)
+		o = create_obj()
+		r = create_kr(o, KeyResult.BINARY, obtained=0, expected=1)
+		self.assertEqual(round(r.percentage, 2), 0.0)
+		r = create_kr(o, KeyResult.BINARY, obtained=1, expected=1)
+		self.assertEqual(round(r.percentage, 2), 100.0)
 
 
 
@@ -87,7 +104,7 @@ class OkrViewTest(TestCase):
 		response = self.client.get(reverse('okr:index'))
 		self.assertEqual(response.status_code, 200)
 
-		percentage_expected=round(100*2.0/6.0) # *n/n
+		percentage_expected=round(100*2.0/6.0, 2) # *n/n
 		okr_list = response.context['okr_list']
 		okr = okr_list[0]
 		self.assertEqual(len(okr_list), 1)
@@ -117,7 +134,7 @@ class OkrViewTest(TestCase):
 		response = self.client.get(reverse('okr:archived'))
 		self.assertEqual(response.status_code, 200)
 
-		percentage_expected=round(100*2.0/6.0) # *n/n
+		percentage_expected=round(100*2.0/6.0, 2) # *n/n
 		okr_list = response.context['okr_list']
 		okr = okr_list[0]
 		self.assertEqual(len(okr_list), 1)

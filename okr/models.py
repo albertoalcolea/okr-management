@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from django.db.models import Sum
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -11,6 +12,11 @@ class Objective(models.Model):
 
 	def __unicode__(self): 
 		return self.name
+
+	def percentage_total(self):
+		sum_percentages = self.keyresult_set.aggregate(percentage_total=Sum("percentage"))
+		num_kr = self.keyresult_set.count()
+		return sum_percentages['percentage_total'] / num_kr
 
 
 class KeyResult(models.Model):
@@ -31,19 +37,25 @@ class KeyResult(models.Model):
 								 default=POSITIVE)
 	obtained = models.FloatField()
 	expected = models.FloatField()
+	percentage = models.FloatField()
 	pub_date = models.DateField('publication date', auto_now_add=True)
 
 	def __unicode__(self): 
 		return self.name
 
-	def percentage(self):
-		# Round without decimals
-		if self.type_data == self.POSITIVE:
-			return int(100 * float(self.obtained) / float(self.expected))
-		elif self.type_data == self.NEGATIVE:
-			return int(100 * (1 - float(self.obtained) / float(self.expected)))
-		elif self.type_data == self.BINARY:
-			if self.obtained == 0: 
-				return 0
-			else:
-				return 100
+	def save(self, *args, **kwargs):
+		self.percentage = calculate_percentage(self.type_data, self.obtained, self.expected)
+		super(KeyResult, self).save(*args, **kwargs)
+
+
+def calculate_percentage(type_data, obtained, expected):
+	# Round without decimals
+	if type_data == KeyResult.POSITIVE:
+		return 100 * float(obtained) / float(expected)
+	elif type_data == KeyResult.NEGATIVE:
+		return 100 * (1 - float(obtained) / float(expected))
+	elif type_data == KeyResult.BINARY:
+		if obtained == 0: 
+			return 0
+		else:
+			return 100
