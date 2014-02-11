@@ -35,7 +35,12 @@ body {
 	padding-top: 20px;
 }
 
+#add-obj {
+	margin-bottom: 20px;
+}
+
 .okr {
+	clear: both;
 	border-radius: 7px; 
 	-moz-border-radius: 7px;
 	-webkit-border-radius: 7px;
@@ -120,7 +125,3 @@ body {
 	margin-bottom: 5px;
 	font-weight: 700;
 }
-
- .okr .end-date {
- 	font-size: small;
- }

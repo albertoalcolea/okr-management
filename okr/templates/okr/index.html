@@ -11,6 +11,15 @@
 	</li>
 {% endblock %}
 
+{% block add_obj %}
+	<small class="pull-left" id="add-obj">
+		<a href="#">
+			<span class="glyphicon glyphicon-plus"></span>
+			Add Objective
+		</a>
+	</small>
+{% endblock %}
+
 {% block edit-button %}
 	<button type="button" class="btn btn-primary btn-xs" id="kredit-{{ keyresult.id }}">
 		<span class="glyphicon glyphicon-pencil"></span>
@@ -43,4 +52,13 @@
 			</div>
 		</form>
 	</div>
+{% endblock %}
+
+{% block add-kr %}
+	<small class="pull-left">
+		<a href="#">
+			<span class="glyphicon glyphicon-plus"></span>
+			Add Key Result
+		</a>
+	</small>
 {% endblock %}

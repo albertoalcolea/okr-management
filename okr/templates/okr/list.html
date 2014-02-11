@@ -1,6 +1,8 @@
 {% extends "okr/base.html" %}
 
 {% block content %}
+	{% block add_obj %}
+	{% endblock %}
 	{% if okr_list %}
 		{% for okr in okr_list %}
 			<article class="okr jumbotron">
@@ -31,7 +33,9 @@
 						</li>
 					{% endfor %}
 				</ul>
-				<span class="end-date pull-right">End date: {{ okr.objective.end_date }}</span>
+				{% block add-kr %}
+				{% endblock %}
+				<small class="pull-right">End date: {{ okr.objective.end_date }}</small>
 			</article>
 		{% endfor %}
 	{% else %}
