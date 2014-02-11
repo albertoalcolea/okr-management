@@ -42,9 +42,22 @@
 			</div>
 			{% endfor %}
 			<div class="form-group">
+				<label for="id_achieved" class="col-sm-2 control-label">
+					Achieved:
+				</label>
+				<div class="col-sm-9">
+					<label class="radio-inline">
+						<input type="radio" name="achieved" id="id_achieved-yes" value="1"> Yes
+					</label>
+					<label class="radio-inline">
+						<input type="radio" name="achieved" id="id_achieved-no" value="0"> No
+					</label>
+				</div>
+			</div>
+			<div class="form-group">
 				<div class="col-sm-offset-2 col-sm-9">
-				  	<input id="krbtn-{{ keyresult.id }}" type="button" class="btn btn-primary btn-sm" value="Save">
-				  	<input id="krcancel-{{ keyresult.id }}" type="button" class="btn btn-default btn-sm" value="Cancel">
+					<input id="krbtn-{{ keyresult.id }}" type="button" class="btn btn-primary btn-sm" value="Save">
+					<input id="krcancel-{{ keyresult.id }}" type="button" class="btn btn-default btn-sm" value="Cancel">
 				</div>
 			</div>
 		</form>

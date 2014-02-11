@@ -56,13 +56,23 @@ $(document).ready(function() {
 		id = $(this).attr('id').split('-')[1];
 
 		// Ajax request
-		var request = {
-			'id'        : id,
-			'name'      : $('#edit-' + id).find('#id_name').val(),
-			'type_data' : $('#edit-' + id).find('#id_type_data option:selected').val(),
-			'expected'  : $('#edit-' + id).find('#id_expected').val(),
-			'obtained'  : $('#edit-' + id).find('#id_obtained').val()
-		};
+		if ($('#edit-' + id).find('#id_type_data').val() == '2') {
+			var request = {
+				'id'        : id,
+				'name'      : $('#edit-' + id).find('#id_name').val(),
+				'type_data' : $('#edit-' + id).find('#id_type_data').val(),
+				'expected'  : 1,
+				'obtained'  : $('#edit-' + id).find('input[name=achieved]:checked').val()
+			};
+		} else {
+			var request = {
+				'id'        : id,
+				'name'      : $('#edit-' + id).find('#id_name').val(),
+				'type_data' : $('#edit-' + id).find('#id_type_data').val(),
+				'expected'  : $('#edit-' + id).find('#id_expected').val(),
+				'obtained'  : $('#edit-' + id).find('#id_obtained').val()
+			};
+		}
 
 		$.ajax({
 			type: 'POST',
@@ -103,10 +113,10 @@ $(document).ready(function() {
 
 	// Binary type_data
 	$('[id^=id_type_data]').change(function() {
-		if ($(this).find('option:selected').val() == '2') {
-			edit_panel = $(this).parents('[id^=edit-]');
-			edit_panel.find('#id_expected').val(1);
-			edit_panel.find('#id_obtained').val(0);
+		form = $(this).parents('form');
+		adapt_options(form, $(this).val());
+		if ($(this).val() == '2') {
+			form.find('input[name=achieved][value=0]').prop('checked', true)
 		}
 	});
 
@@ -124,20 +134,34 @@ $(document).ready(function() {
             location.href = this.href;
         }
     });
+
+    // fill inputs in binary type (in add mode)
+    $('#add-kr').parents('form').submit(function() {
+    	$('#id_expected').val(1);
+    	$('#id_obtained').val($('input[name=achieved]:checked').val());
+    });
+
+    // Hide binary options (in add mode)
+    adapt_options($('form'), '0');
 });
 
 
 // Show and hide while we are editing
 function editMode(id) {
 	// Update the form fields
-	updateKRFields(id)
+	updateKRFields(id);
 
 	// Hide previous errors
-	hideErrors(id)
+	hideErrors(id);
+
+	// Hide binary options or natural options
+	form = $('#edit-' + id).find('form');
+	type_data = $('#edit-' + id).find('#id_type_data').val();
+	adapt_options(form, type_data);
 
 	// If a edit panel is open and it is above this, when we'll hide
 	// and we'll scroll down, the offset will be incorrect
-	added = 0
+	added = 0;
 	our_offset = $('#kr-' + id).offset().top;
 
 	// Check if there is a edit panel open above of this
@@ -190,6 +214,21 @@ function hideErrors(id) {
 	$("[id^=krerror-" + id + "-]").hide();
 }
 
+function adapt_options(form, type) {
+	expected = form.find('input[name=expected]').parents('.form-group');
+	obtained = form.find('input[name=obtained]').parents('.form-group');
+	achieved = form.find('input[name=achieved]').parents('.form-group');
+	if (type == '2') {
+		expected.hide();
+		obtained.hide();
+		achieved.show();
+	} else {
+		expected.show();
+		obtained.show();
+		achieved.hide();
+	}
+}
+
 
 // Update key result after editing
 function updateKR(id, data) {
@@ -215,8 +254,12 @@ function updateKRFields(id) {
 		success: function (data) {
 			$('#edit-' + id).find('#id_name').val(data['name']);
 			$('#edit-' + id).find('#id_type_data').val(data['type_data']);
-			$('#edit-' + id).find('#id_expected').val(data['expected']);
-			$('#edit-' + id).find('#id_obtained').val(data['obtained']);
+			if (data['type_data'] == '2') {
+				$('#edit-' + id).find('input[name=achieved][value=' + data['obtained'] + ']').prop('checked', true);
+			} else {
+				$('#edit-' + id).find('#id_expected').val(data['expected']);
+				$('#edit-' + id).find('#id_obtained').val(data['obtained']);
+			}
 			return true;
 		},
 		error: function (xhr, errmsg, err) {
