@@ -101,6 +101,15 @@ $(document).ready(function() {
 		detailsMode(id);
 	});
 
+	// Binary type_data
+	$('[id^=id_type_data]').change(function() {
+		if ($(this).find('option:selected').val() == '2') {
+			edit_panel = $(this).parents('[id^=edit-]');
+			edit_panel.find('#id_expected').val(1);
+			edit_panel.find('#id_obtained').val(0);
+		}
+	});
+
 	$('#cancel').click(function() {
 		window.location.href = '/okr/';
 	});

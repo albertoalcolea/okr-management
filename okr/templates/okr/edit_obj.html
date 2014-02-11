@@ -1,0 +1,41 @@
+{% extends "okr/base.html" %}
+
+{% block title %}Edit Objective{% endblock %}
+
+{% block nav %}
+	<li class="active">
+		<a href="{% url 'okr:index' %}">Your OKRs</a>
+	</li>
+	<li>
+		<a href="{% url 'okr:archived' %}">Archived</a>
+	</li>
+{% endblock %}
+
+{% block content %}
+	<article class="okr jumbotron">
+		<h2>{{ objective.name }}</h2>
+		<h4>Edit objective</h4>
+		<form method="post" action="{% url 'okr:edit_obj' objective.id %}" class="form-horizontal">
+			{% csrf_token %}
+			{% for field in form.visible_fields %}
+			<div class="form-group">
+					<label for="{{ field.id_for_label }}" class="col-sm-2 control-label">
+						{{ field.label }}:
+					</label>
+					<div class="col-sm-9">
+						<div class="error-msg" style="display:block">
+						{{ field.errors }}
+						</div>
+						{{ field }}
+					</div>
+				</div>
+			{% endfor %}
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-sm-9">
+				  	<input id="add" type="submit" class="btn btn-primary btn-sm" value="Edit">
+				  	<input id="cancel" type="button" class="btn btn-default btn-sm" value="Cancel">
+				</div>
+			</div>
+		</form>
+	</article>
+{% endblock %}
