@@ -1,7 +1,8 @@
 var DURATION_ANIMATION = 250
 
-
+/******************************************************************/
 // CSRF
+/******************************************************************/
 function getCookie(name) {
 	var cookieValue = null;
 	if (document.cookie && document.cookie != '') {
@@ -47,11 +48,12 @@ $.ajaxSetup({
 		}
 	}
 });
-
+/******************************************************************/
 
 
 
 $(document).ready(function() {
+	// Submit edit kr
 	$("[id^=krbtn-]").click(function() {
 		id = $(this).attr('id').split('-')[1];
 
@@ -96,6 +98,7 @@ $(document).ready(function() {
 	});
 
 
+	// Open edition mode
 	$("[id^=kredit-]").click(function() {
 		id = $(this).attr('id').split('-')[1];
 		if ( $('#details-' + id).is(':visible') ) {
@@ -106,12 +109,14 @@ $(document).ready(function() {
 	});
 
 
+	// Close edition mode
 	$("[id^=krcancel-]").click(function() {
 		id = $(this).attr('id').split('-')[1];
 		detailsMode(id);
 	});
 
-	// Binary type_data
+
+	// Change keyresult to binary
 	$('[id^=id_type_data]').change(function() {
 		form = $(this).parents('form');
 		adapt_options(form, $(this).val());
@@ -120,12 +125,16 @@ $(document).ready(function() {
 		}
 	});
 
+
+	// Cancel add objective or keyresult and go back
 	$('#cancel').click(function() {
 		window.location.href = '/okr/';
 	});
 
+
 	// Datepicker calendar
 	$('#id_end_date').datepicker()
+
 
 	// Delete: are you sure?
 	$('.delete').click(function(e) {
@@ -135,18 +144,20 @@ $(document).ready(function() {
         }
     });
 
+
     // fill inputs in binary type (in add mode)
     $('#add-kr').parents('form').submit(function() {
     	$('#id_expected').val(1);
     	$('#id_obtained').val($('input[name=achieved]:checked').val());
     });
 
+
     // Hide binary options (in add mode)
     adapt_options($('form'), '0');
 });
 
 
-// Show and hide while we are editing
+// Show edition mode
 function editMode(id) {
 	// Update the form fields
 	updateKRFields(id);
@@ -191,6 +202,7 @@ function editMode(id) {
 }
 
 
+// Show details mode
 function detailsMode(id) {
 	$('#details-' + id).show(DURATION_ANIMATION);
 	$('#edit-' + id).hide(DURATION_ANIMATION);
@@ -214,6 +226,8 @@ function hideErrors(id) {
 	$("[id^=krerror-" + id + "-]").hide();
 }
 
+
+// Change fields on edition mode (natural keyresult or binary keyresult)
 function adapt_options(form, type) {
 	expected = form.find('input[name=expected]').parents('.form-group');
 	obtained = form.find('input[name=obtained]').parents('.form-group');
