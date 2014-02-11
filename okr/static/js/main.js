@@ -232,6 +232,7 @@ function adapt_options(form, type) {
 	expected = form.find('input[name=expected]').parents('.form-group');
 	obtained = form.find('input[name=obtained]').parents('.form-group');
 	achieved = form.find('input[name=achieved]').parents('.form-group');
+
 	if (type == '2') {
 		expected.hide();
 		obtained.hide();
@@ -263,6 +264,7 @@ function updateKRFields(id) {
 	// Ajax request
 	$.ajax({
 		type: 'GET',
+		async: false,
 		url: '/okr/show_kr/' + id,
 		dataType: 'json',
 		success: function (data) {
@@ -277,7 +279,8 @@ function updateKRFields(id) {
 			return true;
 		},
 		error: function (xhr, errmsg, err) {
+			alert('Oops! something went wrong.');
 			return false;
 		}
-	});	
+	});
 }
