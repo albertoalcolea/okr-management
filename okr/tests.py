@@ -5,7 +5,7 @@ import datetime
 
 from django.contrib.auth.models import User
 from okr.models import Objective, KeyResult
-from okr.forms import KeyResultForm
+from okr.forms import ObjectiveForm, KeyResultForm
 
 
 # Auxiliar functions
@@ -25,7 +25,13 @@ def create_kr_form(name, type_data, expected, obtained):
 							   'type_data': type_data,
 							   'expected': expected,
 							   'obtained': obtained
-			})
+	})
+
+
+def create_obj_form(name, end_date):
+	return ObjectiveForm(data={'name': name,
+							   'end_date': end_date,
+	})
 
 
 
@@ -124,7 +130,19 @@ class OkrViewTest(TestCase):
 # FORMS
 ###########################################################################
 
-class OkrFormTest(TestCase):
+class ObjectiveFormTest(TestCase):
+	def test_form_valid(self):
+		form = create_obj_form('test obj', '02/28/2080')
+		self.assertTrue(form.is_valid())  
+		self.assertEqual(form.cleaned_data['name'], 'test obj')
+		self.assertEqual(form.cleaned_data['end_date'], datetime.date(2080, 2, 28))
+
+	def test_invalid_date(self):
+		form = create_obj_form('test obj', '02/28/2002')
+		self.assertFalse(form.is_valid())  
+
+
+class KeyResultFormTest(TestCase):
 	def test_form_valid(self):
 		form = create_kr_form('test kr', KeyResult.POSITIVE, 2.0, 2.0)
 		self.assertTrue(form.is_valid())  
@@ -179,4 +197,3 @@ class OkrFormTest(TestCase):
 		self.assertTrue(form.is_valid())
 		form = create_kr_form('test kr', KeyResult.BINARY, 1, 3)
 		self.assertFalse(form.is_valid())
-

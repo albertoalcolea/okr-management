@@ -8,6 +8,7 @@ class ObjectiveAdmin(admin.ModelAdmin):
 	list_filter = ['pub_date']
 	search_fields = ['name', 'user']
 	date_hierarchy = 'pub_date'
+	ordering = ('end_date',)
 
 
 class KeyResultAdmin(admin.ModelAdmin):
@@ -19,6 +20,7 @@ class KeyResultAdmin(admin.ModelAdmin):
 	list_filter = ['pub_date']
 	search_fields = ['name', 'objective']
 	date_hierarchy = 'pub_date'
+	ordering = ('-pub_date',)
 
 
 admin.site.register(Objective, ObjectiveAdmin)

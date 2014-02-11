@@ -1,0 +1,39 @@
+{% extends "okr/base.html" %}
+
+{% block nav %}
+	<li class="active">
+		<a href="{% url 'okr:index' %}">Your OKRs</a>
+	</li>
+	<li>
+		<a href="{% url 'okr:archived' %}">Archived</a>
+	</li>
+{% endblock %}
+
+{% block content %}
+	<article class="okr jumbotron">
+		{% block title_info %}{% endblock %}
+		<form method="post" action="{% block form_action %}{% endblock %}" class="form-horizontal">
+			{% csrf_token %}
+			{% for field in form.visible_fields %}
+			<div class="form-group">
+					<label for="{{ field.id_for_label }}" class="col-sm-2 control-label">
+						{{ field.label }}:
+					</label>
+					<div class="col-sm-9">
+						<div class="error-msg" style="display:block">
+						{{ field.errors }}
+						</div>
+						{{ field }}
+					</div>
+				</div>
+			{% endfor %}
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-sm-9">
+					{% block submit_button %}{% endblock %}
+				  	<input id="cancel" type="button" class="btn btn-default btn-sm" value="Cancel">
+				</div>
+			</div>
+		</form>
+		{% block delete_link %}{% endblock %}
+	</article>
+{% endblock %}

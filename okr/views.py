@@ -5,8 +5,10 @@ from django.core.urlresolvers import reverse
 from django.utils import timezone
 import json
 
+from django.contrib.auth.models import User
 from okr.models import Objective, KeyResult
 from okr.forms import ObjectiveForm, KeyResultForm
+
 
 
 def get_details(type_data, obtained, expected):
@@ -135,12 +137,20 @@ def add_kr(request, o):
 		return render(request, "okr/add_kr.html", context)
 
 
+def delete_kr(request, id):
+	get_object_or_404(KeyResult, pk=id).delete()
+	return HttpResponseRedirect(reverse('okr:index'))
+
+
 
 def add_obj(request):
 	if request.method == "POST":
 		form = ObjectiveForm(request.POST)
 		if form.is_valid():
-			form.save()
+			user = User.objects.get(username='admin')
+			o = form.save(commit=False)
+			o.user = user
+			o.save()
 			return HttpResponseRedirect(reverse('okr:index'))
 		else:
 			context = {'form': form}
@@ -165,9 +175,14 @@ def edit_obj(request, id):
 			}
 			return render(request, "okr/edit_obj.html", context)
 	else:
-   		form = ObjectiveForm(instance=obj)
+		form = ObjectiveForm(instance=obj)
 		context = {
 			'form': form,
 			'objective': obj
 		}
 		return render(request, "okr/edit_obj.html", context)
+
+
+def delete_obj(request, id):
+	get_object_or_404(Objective, pk=id).delete()
+	return HttpResponseRedirect(reverse('okr:index'))

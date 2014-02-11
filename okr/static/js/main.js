@@ -116,6 +116,14 @@ $(document).ready(function() {
 
 	// Datepicker calendar
 	$('#id_end_date').datepicker()
+
+	// Delete: are you sure?
+	$('.delete').click(function(e) {
+        e.preventDefault();
+        if (window.confirm("Are you sure?")) {
+            location.href = this.href;
+        }
+    });
 });
 
 

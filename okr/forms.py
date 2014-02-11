@@ -7,7 +7,7 @@ class ObjectiveForm(ModelForm):
 
 	class Meta:
 		model = Objective
-		fields = ('user', 'name', 'end_date')
+		fields = ('name', 'end_date')
 
 	# Configured to Bootstrap classes
 	def __init__(self, *args, **kwargs):
