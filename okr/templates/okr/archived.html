@@ -2,14 +2,7 @@
 
 {% block title %}Archived OKR's{% endblock %}
 
-{% block nav_tabs %}
-	<li>
-		<a href="{% url 'okr:index' %}">Your OKRs</a>
-	</li>
-	<li class="active">
-		<a href="{% url 'okr:archived' %}">Archived</a>
-	</li>
-{% endblock %}
+{% block nav_archived %} class="active"{% endblock %}
 
 {% block okr-name %}
 	{{ okr.objective.name }}

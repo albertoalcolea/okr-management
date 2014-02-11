@@ -2,14 +2,7 @@
 
 {% block title %}OKR Management System{% endblock %}
 
-{% block nav_tabs %}
-	<li class="active">
-		<a href="{% url 'okr:index' %}">Your OKRs</a>
-	</li>
-	<li>
-		<a href="{% url 'okr:archived' %}">Archived</a>
-	</li>
-{% endblock %}
+{% block nav_visible %} class="active"{% endblock %}
 
 {% block add_obj %}
 	<small class="pull-left" id="add-obj">

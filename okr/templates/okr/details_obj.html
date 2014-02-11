@@ -1,13 +1,6 @@
 {% extends "okr/base_logged.html" %}
 
-{% block nav_tabs %}
-	<li class="active">
-		<a href="{% url 'okr:index' %}">Your OKRs</a>
-	</li>
-	<li>
-		<a href="{% url 'okr:archived' %}">Archived</a>
-	</li>
-{% endblock %}
+{% block nav_visible %} class="active"{% endblock %}
 
 {% block content %}
 	<article class="okr jumbotron">
