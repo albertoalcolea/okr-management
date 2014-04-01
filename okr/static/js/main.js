@@ -1,4 +1,4 @@
-var DURATION_ANIMATION = 250
+var DURATION_ANIMATION = 250;
 
 /******************************************************************/
 // CSRF
@@ -44,7 +44,7 @@ $.ajaxSetup({
 			// Send the token to same-origin, relative URLs only.
 			// Send the token only if the method warrants CSRF protection
 			// Using the CSRFToken value acquired earlier
-			xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+			xhr.setRequestHeader('X-CSRFToken', getCookie('csrftoken'));
 		}
 	}
 });
@@ -54,7 +54,7 @@ $.ajaxSetup({
 
 $(document).ready(function() {
 	// Submit edit kr
-	$("[id^=krbtn-]").click(function() {
+	$('[id^=krbtn-]').click(function() {
 		id = $(this).attr('id').split('-')[1];
 
 		// Ajax request
@@ -81,16 +81,16 @@ $(document).ready(function() {
 			url: '/okr/edit_kr/',
 			data: request,
 			dataType: 'json',
-			success: function (res) {
-				if (res['status'] == 'ok') {
+			success: function(res) {
+				if (res.status == 'ok') {
 					hideErrors(id);
-					updateKR(id, res['data']);
+					updateKR(id, res.data);
 					detailsMode(id);
-				} else if (res['status'] == 'error') {
-					showErrors(id, res['data']);
+				} else if (res.status == 'error') {
+					showErrors(id, res.data);
 				}
 			},
-			error: function (xhr, errmsg, err) {
+			error: function(xhr, errmsg, err) {
 				alert('Oops! something went wrong.');
 				detailsMode(id);
 			}
@@ -99,18 +99,18 @@ $(document).ready(function() {
 
 
 	// Open edition mode
-	$("[id^=kredit-]").click(function() {
+	$('[id^=kredit-]').click(function() {
 		id = $(this).attr('id').split('-')[1];
-		if ( $('#details-' + id).is(':visible') ) {
+		if ($('#details-' + id).is(':visible')) {
 			editMode(id);
 		} else {
 			detailsMode(id);
-		}    
+		}
 	});
 
 
 	// Close edition mode
-	$("[id^=krcancel-]").click(function() {
+	$('[id^=krcancel-]').click(function() {
 		id = $(this).attr('id').split('-')[1];
 		detailsMode(id);
 	});
@@ -121,7 +121,7 @@ $(document).ready(function() {
 		form = $(this).parents('form');
 		adapt_options(form, $(this).val());
 		if ($(this).val() == '2') {
-			form.find('input[name=achieved][value=0]').prop('checked', true)
+			form.find('input[name=achieved][value=0]').prop('checked', true);
 		}
 	});
 
@@ -133,13 +133,13 @@ $(document).ready(function() {
 
 
 	// Datepicker calendar
-	$('#id_end_date').datepicker()
+	$('#id_end_date').datepicker();
 
 
 	// Delete: are you sure?
 	$('.delete').click(function(e) {
         e.preventDefault();
-        if (window.confirm("Are you sure?")) {
+        if (window.confirm('Are you sure?')) {
             location.href = this.href;
         }
     });
@@ -147,8 +147,8 @@ $(document).ready(function() {
 
     // fill inputs in binary type (in add mode)
     $('#add-kr').parents('form').submit(function() {
-    	$('#id_expected').val(1);
-    	$('#id_obtained').val($('input[name=achieved]:checked').val());
+        $('#id_expected').val(1);
+        $('#id_obtained').val($('input[name=achieved]:checked').val());
     });
 
 
@@ -180,8 +180,8 @@ function editMode(id) {
 		other_id = $(this).attr('id').split('-')[1];
 		edit_panel = $('#edit-' + other_id);
 
-		if ( edit_panel.is(':visible') ) {
-			if ( edit_panel.offset().top < our_offset ) {
+		if (edit_panel.is(':visible')) {
+			if (edit_panel.offset().top < our_offset) {
 				added = edit_panel.height() + $('#details-' + id).height() + 25;
 				return;
 			}
@@ -195,7 +195,7 @@ function editMode(id) {
 
 	$('#details-' + id).hide(DURATION_ANIMATION);
 	$('#edit-' + id).show(DURATION_ANIMATION);
-	
+
 	// scroll
 	var offset = $('#kr-' + id).offset().top - 25 - added;
 	$('html').animate({	scrollTop: offset }, DURATION_ANIMATION);
@@ -214,7 +214,7 @@ function detailsMode(id) {
 
 
 function showErrors(id, errs) {
-	for(var field in errs) {
+	for (var field in errs) {
 		f = $('#krerror-' + id + '-' + 'id_' + field);
 		f.text(errs[field]);
 		f.show();
@@ -223,7 +223,7 @@ function showErrors(id, errs) {
 
 
 function hideErrors(id) {
-	$("[id^=krerror-" + id + "-]").hide();
+	$('[id^=krerror-' + id + '-]').hide();
 }
 
 
@@ -247,15 +247,15 @@ function adapt_options(form, type) {
 
 // Update key result after editing
 function updateKR(id, data) {
-	$('#krname-' + id).text(data['name']);
-	$('#krprogress-' + id).css({'width': data['percentage'] + '%'});
-	$('#krprogress-' + id).find('span').text(data['percentage'] + '%');
-	$('#details-' + id).text(data['details']);
+	$('#krname-' + id).text(data.name);
+	$('#krprogress-' + id).css({'width': data.percentage + '%'});
+	$('#krprogress-' + id).find('span').text(data.percentage + '%');
+	$('#details-' + id).text(data.details);
 
 	// Update objective percentage total
-	p = $('#edit-' + id).parents('.okr').find('[id^=objprogress-]')
-	p.css({'width': data['percentage_total'] + '%'});
-	p.find('span').text(data['percentage_total'] + '%');
+	p = $('#edit-' + id).parents('.okr').find('[id^=objprogress-]');
+	p.css({'width': data.percentage_total + '%'});
+	p.find('span').text(data.percentage_total + '%');
 }
 
 
@@ -267,18 +267,18 @@ function updateKRFields(id) {
 		async: false,
 		url: '/okr/show_kr/' + id,
 		dataType: 'json',
-		success: function (data) {
-			$('#edit-' + id).find('#id_name').val(data['name']);
-			$('#edit-' + id).find('#id_type_data').val(data['type_data']);
-			if (data['type_data'] == '2') {
-				$('#edit-' + id).find('input[name=achieved][value=' + data['obtained'] + ']').prop('checked', true);
+		success: function(data) {
+			$('#edit-' + id).find('#id_name').val(data.name);
+			$('#edit-' + id).find('#id_type_data').val(data.type_data);
+			if (data.type_data == '2') {
+				$('#edit-' + id).find('input[name=achieved][value=' + data.obtained + ']').prop('checked', true);
 			} else {
-				$('#edit-' + id).find('#id_expected').val(data['expected']);
-				$('#edit-' + id).find('#id_obtained').val(data['obtained']);
+				$('#edit-' + id).find('#id_expected').val(data.expected);
+				$('#edit-' + id).find('#id_obtained').val(data.obtained);
 			}
 			return true;
 		},
-		error: function (xhr, errmsg, err) {
+		error: function(xhr, errmsg, err) {
 			alert('Oops! something went wrong.');
 			return false;
 		}

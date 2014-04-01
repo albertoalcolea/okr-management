@@ -54,9 +54,9 @@ class KeyResult(models.Model):
 def calculate_percentage(type_data, obtained, expected):
 	# Round without decimals
 	if type_data == KeyResult.POSITIVE:
-		return 100 * float(obtained) / float(expected)
+		return 100 * obtained / expected
 	elif type_data == KeyResult.NEGATIVE:
-		return 100 * (1 - float(obtained) / float(expected))
+		return 100 * (1 - obtained / expected)
 	elif type_data == KeyResult.BINARY:
 		if obtained == 0: 
 			return 0
