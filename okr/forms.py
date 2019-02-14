@@ -66,7 +66,7 @@ class KeyResultForm(ModelForm):
 
 
 class AuthForm(AuthenticationForm):
-	
+
 	# Configured to Bootstrap classes
 	def __init__(self, *args, **kwargs):
 		super(AuthForm, self).__init__(*args, **kwargs)

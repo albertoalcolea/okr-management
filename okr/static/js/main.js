@@ -147,8 +147,10 @@ $(document).ready(function() {
 
     // fill inputs in binary type (in add mode)
     $('#add-kr').parents('form').submit(function() {
-        $('#id_expected').val(1);
-        $('#id_obtained').val($('input[name=achieved]:checked').val());
+    	if ($('#id_type_data').val() == 2) {
+        	$('#id_expected').val(1);
+        	$('#id_obtained').val($('input[name=achieved]:checked').val());
+        }
     });
 
 

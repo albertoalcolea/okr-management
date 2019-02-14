@@ -1,9 +1,9 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 
 from okr import views
 
 
-urlpatterns = patterns('',
+urlpatterns = [
     url(r'^$', views.visible, name='index'),
     url(r'^archived/$', views.archived, name='archived'),
     url(r'^archived/page/(?P<page>\d+)$', views.archived_paged, name='archived_paged'),
@@ -18,4 +18,4 @@ urlpatterns = patterns('',
     url(r'^logout/$', views.user_logout, name='logout'),
     url(r'^register/$', views.register, name='register'),
     url(r'^change_password/$', views.change_password, name='change_password'),
-)
+]
