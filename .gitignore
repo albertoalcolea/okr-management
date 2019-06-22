@@ -2,5 +2,4 @@ venv
 *.pyc
 notes
 staticfiles
-manage.py
 dump.sql
